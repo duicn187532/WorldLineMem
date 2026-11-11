@@ -34,6 +34,10 @@
 | 19 | Domingos & Hulten (2000), *Mining High-Speed Data Streams*（Hoeffding tree）, KDD | 你提的線上決策樹的原始方法 |
 | 20 | *Whose Memory Is It?*／CASK，arXiv:2610.09008 | 以「世界」區分記憶的歸屬；可在第一章連結世界線的比喻 |
 | 21 | TransMem，arXiv:2611.10683 | 主題路由（巨觀相似度 + 微觀實體一致性），可借用為場景軸 |
+| 22 | *Scope Before You Persist*，arXiv:2609.29144 | 「證據來自哪裡就只在那裡使用」；全域部署造成跨家族干擾的實驗設計可借用 |
+| 23 | LifeMem，arXiv:2609.12655 | 跨環境分群後抽出與環境無關的技能（環境標籤給定） |
+| 24 | STRATA，arXiv:2610.19386 | 上位框架歸納與防止負遷移的對比邊 |
+| 25 | EngramRAG，arXiv:2609.32049 | 依圖結構而不是時間決定保留（說明為什麼不以「圖結構穩定度輔助保留」為題） |
 
 ## 第三級：寫相關研究時再查（略讀）
 
