@@ -1,0 +1,35 @@
+# Smoke test (engineering check, NOT a benchmark score): 3 LongMemEval-oracle questions.
+[run]
+name = "smoke_lme_oracle_full_context"
+label = "smoke_test"
+seed = 42
+save_prompts = true
+
+[benchmark]
+name = "longmemeval"
+variant = "oracle"
+limit = 3
+
+[memory]
+method = "full_context"
+max_context_tokens = 12000
+
+[answer_model]
+backend = "ollama"
+model = "qwen3:0.6b"          # tiny model: smoke tests check plumbing, not quality
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 256
+think = false
+
+[judge]
+backend = "ollama"
+model = "qwen3:0.6b"
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 8192
+num_predict = 512
+think = false
