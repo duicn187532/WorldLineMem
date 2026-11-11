@@ -74,6 +74,7 @@ smoke test 裡的分數不能採信，原因不只是題數太少，而是 judge
 | FadeMem | 被阻塞 | 找不到官方程式碼，LTI-Bench 沒有公開。不實作「近似版」 |
 | Zep／Graphiti | 待評估 | 需要圖資料庫（Neo4j 或 FalkorDB）和 LLM 抽取；要先記錄資源需求，再由你決定是否安裝 |
 | CUPMem（STALE 作者的原型） | 待評估 | repo 內有程式，需要 OpenAI 相容 API；可以指向 Ollama，但還沒有試 |
-| FedMem、SCOPE | 名稱有歧義 | 需要你提供論文連結 |
+| SCALE-QA、GateMem 接入 runner | 待辦（P1） | 官方程式與資料已下載並鎖定版本；loader 與評分轉接層尚未撰寫。runner 目前以 session 為輸入單位，這兩個 benchmark 以 turn 為單位 |
+| FedMem | 名稱有歧義 | 需要你提供論文連結 |
 | AOEP-v0 | 無法取得 | 論文沒有釋出評估資源 |
 | LongMemEval M 版 | 不納入 | 每題約 500 個 session，超出本機的實際能力 |

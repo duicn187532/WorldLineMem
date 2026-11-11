@@ -29,6 +29,18 @@
       "commit": "538026089d1a8a8eff05121d0db89b388f360eba",
       "license": "MIT",
       "optional": true
+    },
+    "scaleqa": {
+      "url": "https://github.com/LordTARN1SHED/SCALE-QA.git",
+      "commit": "932193c2dcc1d4091783cb3ad7cea8cf578681fa",
+      "license": "CC-BY-4.0 (data, docs); Apache-2.0 (tsim_reference); bundled UltraChat-derived noise MIT",
+      "optional": true
+    },
+    "gatemem": {
+      "url": "https://github.com/rzhub/GateMem.git",
+      "commit": "a983828b3bb7565e16e25ac8cdc2fc1982633b0b",
+      "license": "MIT (code); data CC-BY-4.0 per HF Ray368/GateMem",
+      "optional": true
     }
   },
   "datasets": {

@@ -18,6 +18,8 @@
 | LongMemEval | P0 | **Verified** | 程式：github.com/xiaowu0162/LongMemEval @`9e0b455`；資料：HF `xiaowu0162/longmemeval-cleaned` @`98d7416`（2025-09 清理版） | MIT | 500 題 × {oracle, S}；S 約 50 個 session、約 11.5 萬 token；M 版約 500 個 session（未納入） | GPT-4o judge，各題型用不同 prompt，`max_tokens=10` | 可行；M 版不納入 |
 | LoCoMo | P1 | Partially Verified | github.com/snap-research/locomo @`3eb6f2c` | **CC BY-NC 4.0**（僅限非商業） | 10 段對話、1,986 題 QA（類別 1–5） | token F1（類別 1–4），類別 5 為對抗題 | 可行；尚未接入 runner |
 | MemoryAgentBench | P1 | Partially Verified | github.com/HUST-AI-HYZ/MemoryAgentBench @`5380260`；HF `ai-hyz/MemoryAgentBench` | MIT | 四類：AR／TTL／LRU／CR；CR 是作者自建的 FactConsolidation（SH／MH） | CR 用 `substring_exact_match`，不需要 LLM judge | 可行；尚未接入 runner |
+| SCALE-QA | P1（新增） | Partially Verified | github.com/LordTARN1SHED/SCALE-QA @`932193c`（v1.1.0，資料在 repo 內；論文結論段指定） | 資料與文件 CC-BY-4.0；TSIM 程式 Apache-2.0；內附的干擾對話取自 UltraChat（MIT） | 3,000 題四選一，10 個領域各 300 題；歷史長度由官方 builder 指定（16k 至 1M） | 選項準確率，**不需要 LLM judge** | 可行；尚未接入 runner |
+| GateMem | P1（新增） | Partially Verified | github.com/rzhub/GateMem @`a983828`；HF `Ray368/GateMem`（兩處資料檔大小相同） | 程式 MIT；資料 CC-BY-4.0 | 91 個多人情節、2,218 個檢查點：utility 728、access control 727、active forgetting 763 | GPT-4o judge；主指標 MGS = U·(1−A)·(1−F) | 可行（每個情節平均約 3,900 個英文詞）；尚未接入 runner；本研究只會用到 utility 子集 |
 | FadeMem 使用的資料 | — | **Unavailable**（LTI-Bench） | 論文 arXiv:2601.18642v2；找不到程式或資料連結 | — | LTI-Bench 10,780 條序列（自建、未公開）；MSC、LoCoMo 是既有公開資料 | RP@10、TCS、FCR、SRR（作者自訂） | LTI-Bench 無法取得；MSC 與 LoCoMo 可取得，但作者的評分程式未公開 |
 | AOEP-v0（Always-On Agents） | 暫不列入 | **Unavailable** | arXiv:2606.30306；論文說明它是「參考設計 + 小型試驗，不是排行榜」 | — | — | 確定性規則檢查（論文描述） | 沒有釋出 harness 或資料 |
 
@@ -88,7 +90,32 @@
 - **評分**：CR 用 `substring_exact_match`，不需要 LLM judge，對本機實驗有利。
 - **注意**：HF 上有第三方的重新包裝版本（例如 `mustbesaltyfish/memoryagentbench-conflict-full`），不是官方來源，**不使用**。
 
-## 名稱有歧義、尚未查證
+## SCALE-QA（P1，尚未接入）
+
+- **論文**：Feng et al., *Reconstructing the Right Episode: Evaluating Interleaved Conversational Memory Beyond Long Context*，arXiv:2608.25655v2（預印本）。
+- **量測的能力**：沒有 session 或主題邊界的單一長對話中，系統能否找回「讓某個限制生效的那一段對話」。這對應本研究的「無會話邊界」設定。
+- **資料**：`scale_qa_strict_valid_bundle.json`（3,000 筆）。每題附有精確的證據句（`expected_doc`），只供稽核，不得提供給受測系統。
+- **歷史的組成**：官方 `build_eval_dataset.py` 依指定長度把題目的來源對話和干擾對話混成單一對話流，同一組種子會產生相同的 package。
+- **評分**：四選一，確定性計分，對本機實驗有利。
+- **注意**：
+  - 論文數字用的干擾對話來自 WildChat（ODC-BY），repo 沒有附，要用官方腳本在本機重建。repo 內附的 UltraChat 版本可以直接用，但**不是論文的設定**，結果不能和論文數字並列。
+  - 資料是反事實建構的單一使用者對話，不含多人情境。
+  - 題目是選擇題，量不到開放式回答的品質（作者自述的限制）。
+
+## GateMem（P1，尚未接入）
+
+- **論文**：Ren et al., *GateMem: Benchmarking Memory Governance in Multi-Principal Shared-Memory Agents*，arXiv:2606.18829v1（預印本）。
+- **量測的能力**：多人共用一個記憶庫時，agent 能否對有權限的人答對（utility）、對無權限的人不洩漏（access control）、刪除後不再回復（active forgetting）。
+- **資料格式**：`bench/data/<領域>/episodes.jsonl` 與 `checkpoints.jsonl`，領域為 medical、office、education、household。每個 turn 有 `speaker{principal_id, role}`、`timestamp`、`turn_kind`、`text`；每個檢查點有 `asker`、`as_of_turn_id`、`query_text`。
+- **逐 turn 輸入**：可以；官方協定是每個情節重置記憶、依時間 ingest，到 `as_of_turn_id` 時提問。
+- **不得提供給受測系統的欄位**：`query_type`、`expected_action`、`judge_spec`、`leak_targets`（官方 README 明列）。
+- **評分**：`bench/eval/`，LLM judge（論文用 GPT-4o）。資料檔中的類別名稱是舊名：`privacy` 對應 access control，`safety` 對應 active forgetting。
+- **注意**：
+  - 提問者身分是**給定**的，量不到「自行推斷目前情境」。
+  - 本研究不納入隱私，只會用到 utility 子集（728 題）。只跑子集就不能報官方的 MGS，結果必須標示為子集。
+  - 官方作答 prompt 要求輸出含 `action` 的 JSON，並附上存取政策；這是協定的一部分，不能省略。
+
+## 名稱有歧義或已釐清
 
 - **FedMem**：arXiv 搜尋沒有找到相符的 agent memory 論文。需要你提供連結。
-- **SCOPE**：有多篇同名或名稱相近的候選，無法確定是哪一篇。需要你提供連結。
+- **SCOPE**：已確認是 *Scope Before You Persist: Preventing Cross-Family Interference in Agent Memory*，arXiv:2609.29144v1。它用的 ProcStream-RSI 是程式修復任務流，不是對話記憶 benchmark，本階段不納入。
