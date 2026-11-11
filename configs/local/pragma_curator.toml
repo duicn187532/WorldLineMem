@@ -1,0 +1,18 @@
+# Experiment B (docs/DECISION_GATES.md, Gate B): Pragma's Curator selection rate on STALE.
+# Local Adaptation. One model plays Pragma's memory role (consolidation + curation), as in the
+# Pragma paper. Fill CHANGE_ME, then:
+#   python scripts\measure_pragma_curator.py configs\local\pragma_curator.toml --pragma <pragma checkout> --sample 100 --seed 0
+[run]
+name = "pragma_curator__CHANGE_ME_memory_model"
+label = "local_adaptation"
+
+[memory_model]
+backend = "ollama"
+model = "CHANGE_ME_memory_model"   # Pragma's paper used 24B-31B instruct models at Q5; prefer the same size class
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0                  # Pragma: temperature 0, greedy
+seed = 42
+num_ctx = 16384                    # STALE sessions: median ~3.6K tokens; longest need more, raise if Ollama refuses
+num_predict = 2048
+max_tokens = 2048                  # Pragma's frozen corpus: SKILL_MAX_TOKENS=2048
+think = false

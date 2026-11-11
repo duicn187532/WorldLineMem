@@ -72,3 +72,11 @@ model = "..."
 Fixed for every method in a comparison: benchmark settings, answer model and its
 options, judge, seed. Only `[memory]` (and `[memory_model]`/`[embedding]` when the method
 needs them) may differ. See docs/EXPERIMENT_PROTOCOL.md.
+
+## Pragma Curator measurement (not a `wlmem run` config)
+
+`configs/local/pragma_curator.toml` is read by `scripts/measure_pragma_curator.py`, not by `wlmem run`.
+It has a `[run]` table (name, label) and a `[memory_model]` table with the same keys as `[answer_model]`,
+plus `max_tokens` (default 2048, Pragma's frozen setting). One model plays Pragma's whole memory role
+(consolidation and curation). `configs/smoke/pragma_curator_mock.toml` checks the plumbing without a model.
+See docs/DECISION_GATES.md §4.
