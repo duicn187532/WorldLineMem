@@ -10,6 +10,7 @@ over the N messages (not causal; acceptable for a feasibility check).
 
     python -I scripts/diagnose_attribution_groupmem.py <domain>.json 6000
 """
+import json, math, re, sys
 from collections import Counter, defaultdict
 path, n_msgs = sys.argv[1], int(sys.argv[2])
 d = json.load(open(path))
