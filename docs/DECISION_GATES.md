@@ -107,8 +107,9 @@ python scripts\measure_pragma_curator.py configs\local\pragma_curator.toml --pra
 
 | 日期 | 事件 | commit | 備註 |
 |---|---|---|---|
-| 2026-11-11 | 草案建立 | （本文件的 commit） | 門檻待研究者確認 |
-| | 研究者確認門檻 | | |
+| 2026-11-11 | 草案建立 | 667803b | |
+| 2026-11-11 | 研究者確認門檻：全部照草案，§2–§5 的數字不變 | 52ace7b 之後的下一個 commit | 作答模型、judge、實驗 B 的記憶模型待研究者決定 |
+| | 選定模型 | | 模型名稱、digest、量化等級 |
 | | 實驗 A 完成 | | 作答模型、judge、digest |
 | | 實驗 B 完成 | | 模型、digest、樣本數 |
 | | 依 §5 做出的決定 | | |
