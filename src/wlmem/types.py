@@ -22,6 +22,10 @@ class Session:
     ``order`` is the chronological position (0-based) within the case.
     ``display`` holds non-gold presentation fields an official prompt needs
     (for example Memora's numeric session id).
+    ``context`` is an optional, non-gold signal about the situation the session happened
+    in (who the agent was talking to, or an opaque token for one uninterrupted stretch of
+    conversation). Only multi-context protocols set it; ``None`` means the benchmark gives
+    no such signal and a method has to infer the situation from the content.
     """
 
     session_id: str
@@ -29,6 +33,7 @@ class Session:
     timestamp: str | None
     turns: tuple[Turn, ...]
     display: dict[str, Any] = field(default_factory=dict)
+    context: str | None = None
 
 
 @dataclass(frozen=True)
@@ -40,6 +45,7 @@ class Query:
     visible_sessions: int
     asked_at: str | None = None
     meta: dict[str, Any] = field(default_factory=dict)  # non-gold, e.g. STALE probing dimension
+    context: str | None = None  # same signal as Session.context, for the situation of the question
 
 
 @dataclass

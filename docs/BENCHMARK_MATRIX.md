@@ -23,6 +23,14 @@
 | FadeMem 使用的資料 | — | **Unavailable**（LTI-Bench） | 論文 arXiv:2601.18642v2；找不到程式或資料連結 | — | LTI-Bench 10,780 條序列（自建、未公開）；MSC、LoCoMo 是既有公開資料 | RP@10、TCS、FCR、SRR（作者自訂） | LTI-Bench 無法取得；MSC 與 LoCoMo 可取得，但作者的評分程式未公開 |
 | AOEP-v0（Always-On Agents） | 暫不列入 | **Unavailable** | arXiv:2606.30306；論文說明它是「參考設計 + 小型試驗，不是排行榜」 | — | — | 確定性規則檢查（論文描述） | 沒有釋出 harness 或資料 |
 
+## 自建協定（不是官方 benchmark）
+
+| 協定 | 狀態 | 來源資料 | 沿用官方的部分 | 自行定義的部分 |
+|---|---|---|---|---|
+| 混合記憶庫（`memora_mixed`） | 第一部分已實作並測試；第二部分未設計 | Memora weekly（鎖定版本同上） | 對話、題目、評分子問題、judge prompt、`fama_score` | 多人對話的交錯方式、情境訊號、prompt 中三處文字、誤取率指標 |
+
+細節見 MIXED_MEMORY_PROTOCOL.md。結果標示為 `derived_protocol:*`。
+
 ## STALE（P0）
 
 - **論文**：Chao et al., *STALE: Can LLM Agents Know When Their Memories Are No Longer Valid?*，arXiv:2605.06527v1（2026-05-07，預印本）。
@@ -118,6 +126,11 @@
   - 提問者身分是**給定**的，量不到「自行推斷目前情境」。
   - 本研究不納入隱私，只會用到 utility 子集（728 題）。只跑子集就不能報官方的 MGS，結果必須標示為子集。
   - 官方作答 prompt 要求輸出含 `action` 的 JSON，並附上存取政策；這是協定的一部分，不能省略。
+
+## 查證後無法取得的資源（2026-11-11）
+
+- **MemAlign**（ConMem 論文的測試集，1,079 個案例，含「情境誤用」類別）：論文中沒有連結，GitHub 和 Hugging Face 搜尋不到。
+- ***Stale, Misattributed, or Late* 的受控 benchmark**：論文說放在匿名 repo，沒有公開連結。
 
 ## 名稱有歧義或已釐清
 

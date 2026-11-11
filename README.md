@@ -10,6 +10,7 @@
 | [docs/BENCHMARK_MATRIX.md](docs/BENCHMARK_MATRIX.md) | 各 benchmark 的官方來源、授權、格式、指標、限制、驗證狀態 |
 | [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) | 已驗證的開發環境、本機盤點方式、Windows 注意事項 |
 | [docs/EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md) | 資料隔離、公平比較、judge 驗證、可重現規則 |
+| [docs/MIXED_MEMORY_PROTOCOL.md](docs/MIXED_MEMORY_PROTOCOL.md) | 自建的混合記憶庫協定（多人共用一個記憶庫），不是官方 benchmark |
 | [docs/VALIDATION_REPORT.md](docs/VALIDATION_REPORT.md) | 已完成、已測通、未完成與阻塞的項目 |
 | [configs/README.md](configs/README.md) | 設定檔各欄位說明 |
 
@@ -47,6 +48,7 @@ wlmem check-ollama --model qwen3:0.6b
 wlmem run      configs\smoke\lme_oracle_full_context.toml
 wlmem evaluate configs\smoke\lme_oracle_full_context.toml
 # 其他：stale_no_memory、stale_rag_bm25、memora_weekly_rag_bm25、lme_s_rag_dense
+# 自建協定：mixed_k2_none_rag_global、mixed_k2_label_rag_scoped
 ```
 
 ## 正式實驗（Local Adaptation）
@@ -84,10 +86,11 @@ src/wlmem/
   backends.py              Ollama 對話與 embedding、mock、成本計數
   memory/                  MemoryAdapter 介面；no_memory、full_context、rag
   benchmarks/              stale、longmemeval、memora（呼叫官方 prompt 與評分程式）
+                           memora_mixed（自建協定：多人交錯成一條對話流）
   runner.py                依時間順序 ingest、續跑、紀錄、評估
   integrity.py             wlmem verify-data
 configs/smoke, configs/local
-tests/                     隔離、時間順序、續跑、官方 prompt 逐字比對
+tests/                     隔離、時間順序、續跑、官方 prompt 逐字比對、混合協定的不變量
 ```
 
 接入新的記憶方法（FadeMem、Zep，或自己的方法），請見實驗協定 §8。

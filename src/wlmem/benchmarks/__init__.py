@@ -1,12 +1,14 @@
 from .base import Benchmark
 from .longmemeval import LongMemEvalBenchmark
 from .memora import MemoraBenchmark
+from .memora_mixed import MemoraMixedBenchmark
 from .stale import StaleBenchmark
 
 BENCHMARKS = {
     "stale": StaleBenchmark,
     "longmemeval": LongMemEvalBenchmark,
     "memora": MemoraBenchmark,
+    "memora_mixed": MemoraMixedBenchmark,  # derived protocol, not an official benchmark
 }
 
 

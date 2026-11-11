@@ -5,6 +5,13 @@ full_context  the whole visible history, oldest sessions dropped first if over b
 rag           retrieval over sessions or user/assistant rounds (BM25 or dense embeddings)
 
 They are deliberately plain: they are the comparison floor, not tuned systems.
+
+``full_context`` and ``rag`` take ``scope``:
+    "global"   (default) every stored session is eligible
+    "context"  only sessions whose ``Session.context`` equals ``Query.context``. This is
+               hard isolation by a signal the benchmark supplies; it is an oracle reference
+               for multi-context protocols, not a method. It fails loudly when the
+               benchmark supplies no signal.
 """
 from __future__ import annotations
 
@@ -20,6 +27,21 @@ from .base import MemoryAdapter, register
 
 def session_text(turns: tuple[Turn, ...] | list[Turn]) -> str:
     return "\n".join(f"{t.role}: {t.content}" for t in turns)
+
+
+def _scope(params: dict[str, Any]) -> str:
+    scope = params.get("scope", "global")
+    if scope not in ("global", "context"):
+        raise ValueError("scope must be 'global' or 'context'")
+    return scope
+
+
+def _in_scope(params: dict[str, Any], session: Session, query: Query) -> bool:
+    if _scope(params) == "global":
+        return True
+    if query.context is None:
+        raise ValueError("scope='context' needs a benchmark that sets Query.context (no context signal was given)")
+    return session.context == query.context
 
 
 @register("no_memory")
@@ -45,6 +67,7 @@ class FullContext(MemoryAdapter):
     """
 
     def reset(self) -> None:
+        _scope(self.params)
         self.sessions: list[Session] = []
         self.tokens: list[int] = []
 
@@ -54,24 +77,26 @@ class FullContext(MemoryAdapter):
 
     def retrieve(self, query: Query) -> MemoryContext:
         budget = self.params.get("max_context_tokens")
-        keep = len(self.sessions)
+        eligible = [(s, t) for s, t in zip(self.sessions, self.tokens) if _in_scope(self.params, s, query)]
+        keep = len(eligible)
         if budget is not None:
             total = 0
             keep = 0
-            for tok in reversed(self.tokens):
+            for _, tok in reversed(eligible):
                 if total + tok > budget:
                     break
                 total += tok
                 keep += 1
-        chosen = self.sessions[len(self.sessions) - keep:]
+        chosen = eligible[len(eligible) - keep:]
         return MemoryContext(
-            sessions=chosen,
-            retrieved_ids=[s.session_id for s in chosen],
+            sessions=[s for s, _ in chosen],
+            retrieved_ids=[s.session_id for s, _ in chosen],
             stats={
                 "sessions_total": len(self.sessions),
+                "sessions_in_scope": len(eligible),
                 "sessions_included": keep,
-                "truncated": keep < len(self.sessions),
-                "est_history_tokens": sum(self.tokens[len(self.tokens) - keep:]),
+                "truncated": keep < len(eligible),
+                "est_history_tokens": sum(t for _, t in chosen),
             },
         )
 
@@ -103,6 +128,7 @@ class RAG(MemoryAdapter):
         self.units: list[_Unit] = []
         self.vecs: list[np.ndarray] = []
         self.bm25 = BM25()
+        _scope(self.params)
         g = self.params.get("granularity", "round")
         r = self.params.get("retriever", "bm25")
         if g not in ("round", "session"):
@@ -144,7 +170,8 @@ class RAG(MemoryAdapter):
             qv = _normalise(np.asarray(self.services.embedder.embed([q])[0], dtype=np.float32))
             scores = np.stack(self.vecs) @ qv
         k = int(self.params.get("top_k", 10))
-        order = np.argsort(-scores, kind="stable")[:k]
+        order = [int(i) for i in np.argsort(-scores, kind="stable")
+                 if _in_scope(self.params, self.units[int(i)].session, query)][:k]
         budget = self.params.get("max_context_tokens")
         picked, used = [], 0
         for i in order:
@@ -161,7 +188,7 @@ class RAG(MemoryAdapter):
         sessions = []
         for s, idx in sorted(by_session.values(), key=lambda x: x[0].order):
             turns = tuple(s.turns[j] for j in sorted(idx))
-            sessions.append(Session(s.session_id, s.order, s.timestamp, turns, s.display))
+            sessions.append(Session(s.session_id, s.order, s.timestamp, turns, s.display, s.context))
         return MemoryContext(
             sessions=sessions,
             retrieved_ids=[f"{self.units[i].session.session_id}:{','.join(map(str, self.units[i].turn_idx))}" for i in picked],

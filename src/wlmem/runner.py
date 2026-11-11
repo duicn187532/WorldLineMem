@@ -46,10 +46,12 @@ def _git_state() -> dict[str, Any]:
         return {"error": str(e)}
 
 
-def _label(cfg: Config, answer: Any) -> str:
+def _label(cfg: Config, answer: Any, benchmark: Any = None) -> str:
     if getattr(answer, "is_mock", False):
         return "PIPELINE_CHECK_MOCK_MODEL (not a result)"
-    return cfg.run.get("label", "local_adaptation")
+    label = cfg.run.get("label", "local_adaptation")
+    # protocols defined in this repository must never be read as official benchmark results
+    return f"derived_protocol:{label}" if getattr(benchmark, "derived_protocol", False) else label
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -79,7 +81,7 @@ def run(cfg: Config) -> Path:
 
     manifest_path = out / "manifest.json"
     manifest = {
-        "label": _label(cfg, answer),
+        "label": _label(cfg, answer, benchmark),
         "run_name": cfg.run["name"],
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "wlmem_version": __version__,
@@ -148,6 +150,7 @@ def run(cfg: Config) -> Path:
                     "case_id": case.case_id,
                     "method": method,
                     "query_meta": q.meta,
+                    "query_context": q.context,
                     "response": res.text,
                     "answer": {
                         "prompt_tokens": res.prompt_tokens,

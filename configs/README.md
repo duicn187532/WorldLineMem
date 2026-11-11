@@ -34,12 +34,18 @@ case_ids = ["..."]                # explicit cases (optional)
 #              question_limit = N; pass_question_date = false;
 #              drop_user_turns = false (true reproduces the official Track 1 prompt, which
 #              prints no user turn; see docs/BENCHMARK_MATRIX.md)
+# memora_mixed (DERIVED protocol, docs/MIXED_MEMORY_PROTOCOL.md):
+#              period = "weekly"; personas = [...]; group_size = 10;
+#              context_signal = "label" | "boundary" | "none"; lead_in_sessions = 1;
+#              seed = 0; question_limit = N; prompt = "mixed" | "official"
 
 [memory]
 method = "no_memory" | "full_context" | "rag" | <your registered method>
 # full_context: max_context_tokens
 # rag: granularity = "round" | "session"; retriever = "bm25" | "dense"; top_k;
 #      max_context_tokens; query_instruction
+# full_context and rag: scope = "global" | "context". "context" keeps only sessions whose
+#      context signal equals the question's (hard isolation; needs a benchmark that gives a signal)
 
 [answer_model]                    # the reader that writes the final answer
 backend = "ollama"

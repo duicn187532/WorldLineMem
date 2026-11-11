@@ -9,6 +9,7 @@
 | **Original Paper Result** | 原論文報告的數字，照原樣引用並附來源 | 這就是原論文數字本身 |
 | **Local Adaptation** | 官方資料、官方 prompt、官方評分程式，但作答模型、judge 或 embedding 換成本機模型 | **不行**。只能在相同本機設定下互相比較 |
 | **Smoke Test** | 工程驗證，題數極少、模型極小 | 不行；不是研究結果 |
+| **Derived Protocol** | 本研究自己定義的實驗協定（目前是混合記憶庫）。標籤會自動加上 `derived_protocol:` 前綴 | **不行**。不是官方 benchmark 的分數，必須分開報告 |
 
 每次執行的 `manifest.json` 都有 `label` 欄位。使用 mock 模型時，標籤會被強制改成 `PIPELINE_CHECK_MOCK_*`。
 
@@ -34,7 +35,8 @@
    - LongMemEval：`answer`、`question_type`、`answer_session_ids`、turn 層級的 `has_answer`、原始 session id
    - Memora：`share_memory`、`session_type`、`operation`、`operation_details`、`memory_evidence`、`forgetting_evidence`、評分用的子問題
 4. **不使用標準答案做截斷**：STALE 官方的 `--enable-trim` 會依證據位置保留 session，本框架不使用。full_context 超出長度時，一律從最舊的 session 開始捨棄。
-5. **不修改官方資料**：資料以 sha256 驗證，官方 repo 必須是鎖定的 commit 且沒有本地修改，否則程式拒絕執行（`check_official_checkout`）。
+5. **情境訊號不是標準答案，但要明確記錄**：多情境協定可以透過 `Session.context` 和 `Query.context` 提供訊號（身分代號或區塊代碼）。提供了什麼訊號由 `context_signal` 決定並寫進 manifest。persona 名稱、session 的真正擁有者一律放在 `Case.gold`。
+6. **不修改官方資料**：資料以 sha256 驗證，官方 repo 必須是鎖定的 commit 且沒有本地修改，否則程式拒絕執行（`check_official_checkout`）。
 
 ## 4. 公平比較條件
 
@@ -45,7 +47,9 @@
 - judge 模型及其設定
 - 作答 prompt（由 benchmark 決定，記憶方法無法更改）
 
-只有 `[memory]`（以及記憶方法需要的 `[memory_model]`、`[embedding]`）可以不同。若要比較不同的 embedding 模型，那是另一組實驗。
+只有 `[memory]`（以及記憶方法需要的 `[memory_model]`、`[embedding]`）可以不同。
+
+`scope = "context"`（依訊號完全隔離）是參考用的上限，不是方法。它用到了 benchmark 給的訊號，所以只能和同樣拿到該訊號的設定比較。若要比較不同的 embedding 模型，那是另一組實驗。
 
 ### 解碼設定
 
