@@ -62,10 +62,10 @@ KV cache 大小 ≈ 2 × 層數 × KV heads × head_dim × context 長度 × 每
 
 | benchmark | 實測歷史長度 | 說明 |
 |---|---|---|
-| STALE | 146K–161K token | 需要原生支援 ≥ 180K 的模型。若模型的原生上限較小，Ollama 會截斷輸入，runner 會標記 `ctx_overflow` |
+| STALE | 146K–161K token | 需要原生支援 ≥ 180K 的模型。若模型的原生上限較小，請求會被拒絕並記入 `errors.jsonl` |
 | LongMemEval_S | 103K–105K token | 需要 ≥ 128K |
-| Memora weekly | 34K–36K token | 64K 就足夠 |
-| Memora monthly | 約 132K token | 需要 ≥ 160K |
+| Memora weekly | 56K–65K token（全部 10 個 persona，含雙方發言） | 需要 ≥ 96K |
+| Memora monthly | 144K–145K token（全部 10 個 persona，含雙方發言） | 需要 ≥ 180K |
 | Memora quarterly | 約 45 萬 token（推估） | 放不進任何本機模型，只適合跑記憶方法 |
 
 實際的可行模型與速度，要等 Z13 盤點後再填寫。

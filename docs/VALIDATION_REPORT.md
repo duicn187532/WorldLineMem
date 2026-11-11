@@ -26,8 +26,8 @@
 | 官方 repo checkout（STALE、LongMemEval、Memora、LoCoMo、MemoryAgentBench） | 五個都在鎖定的 commit |
 | 資料 sha256（STALE、LongMemEval oracle 與 S）、Memora 資料目錄雜湊（27,644 個檔案） | 全部吻合 |
 | `wlmem verify-data`：題數與結構 | STALE 400（T1 200／T2 200）、LongMemEval 500×2、Memora 10 個 persona × 3 種長度 |
-| 單元測試 `pytest` | 12 個全部通過 |
-| 本框架產生的 STALE 和 Memora prompt 與官方程式產生的逐字相同 | 通過（`test_official_provenance.py`） |
+| 單元測試 `pytest` | 13 個全部通過 |
+| 本框架產生的 STALE prompt 與官方程式產生的逐字相同；Memora 在 `drop_user_turns = true` 時逐字相同 | 通過（`test_official_provenance.py`） |
 | LongMemEval 複製過來的 prompt 模板在官方檔案中逐字存在 | 通過 |
 | 案例之間記憶隔離、依時間順序 ingest、提問前只看得到已發生的 session | 通過（`test_runner_protocol.py`） |
 | 標準答案欄位不會進入記憶方法或 prompt（`has_answer`、`answer_*` id、Memora 的標註欄位） | 通過 |
@@ -45,7 +45,9 @@
 | LongMemEval S × rag（dense，round） | 2 | 0 | 1,499–3,306 | 13 s | 237–246 s（每個案例約 1,500 個 round 的 embedding） | 2 次呼叫 |
 | STALE × no_memory | 6 | 0 | 63–87 | 4 s | 0 | 官方 `run_evaluation`，T1 |
 | STALE × rag（BM25，round） | 6 | 0 | 4,199–6,331 | 53 s | < 0.1 s | 官方 `run_evaluation`，T1 |
-| Memora weekly × rag（BM25） | 3 | 0 | 1,148–1,343 | 7 s | < 0.1 s | 官方 `ModelEvaluator`，32 個子問題 |
+| Memora weekly × rag（BM25）※ | 3 | 0 | 1,148–1,343 | 7 s | < 0.1 s | 官方 `ModelEvaluator`，32 個子問題 |
+
+※ 這一列是在讀取程式漏掉使用者發言的錯誤下跑的（見 BENCHMARK_MATRIX.md 的 Memora 已知問題）。錯誤已修正並有測試，但修正後**尚未重跑** smoke test，因為目前的容器沒有 Ollama。
 
 所有測試都確認了：資料可以讀取、session 依時間順序輸入、模型能回答、官方評分程式能輸出、日誌與 manifest 都有寫出。
 

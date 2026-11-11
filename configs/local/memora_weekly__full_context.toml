@@ -11,7 +11,7 @@ periods = ["weekly"]
 
 [memory]
 method = "full_context"
-max_context_tokens = 61440
+max_context_tokens = 88000   # weekly histories are 56K-65K tokens (cl100k estimate) with both speakers
 
 [answer_model]
 backend = "ollama"
@@ -19,7 +19,7 @@ model = "CHANGE_ME_answer_model"   # pick from `ollama list`; keep it fixed acro
 base_url = "http://127.0.0.1:11434"
 temperature = 0.0
 seed = 42
-num_ctx = 65536
+num_ctx = 98304
 num_predict = 512
 think = false
 

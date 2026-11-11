@@ -18,6 +18,12 @@ Faithfulness notes:
   question files do not have, so its prompt carries no current date. ``pass_question_date``
   (default false) keeps that behaviour; true supplies ``question_date`` instead and is a
   documented deviation.
+* The released sessions label the human side ``user_agent``, but the official Track 1
+  ``PromptBuilder`` only prints turns labelled ``ai_agent`` or ``user``. At the pinned commit
+  its full-history prompt therefore contains no user turn at all (the official Track 2 agent
+  integrations do map ``user_agent`` to ``user``). Memory methods here always receive both
+  sides. The rendered history shows both sides by default; ``drop_user_turns = true``
+  reproduces the official Track 1 prompt byte for byte.
 * The official setup uses a three-judge majority (GPT-4.1, Claude Haiku 4.5, Gemini 2.5
   Flash via OpenRouter). Here a single local judge is used: Local Adaptation.
 """
@@ -34,6 +40,8 @@ PERIODS = ("weekly", "monthly", "quarterly")
 TASKS = ("remembering", "reasoning", "recommending")
 TASK_LABEL = {"remembering": "Remembering", "reasoning": "Reasoning", "recommending": "Recommending"}
 EVALUATOR = "evals/model_eval/model_based_evaluator.py"
+# speaker labels in the released data ("user" only appears in official example code)
+SPEAKER_ROLE = {"ai_agent": "assistant", "user_agent": "user", "user": "user"}
 
 
 class MemoraBenchmark(Benchmark):
@@ -72,9 +80,9 @@ class MemoraBenchmark(Benchmark):
                 order=i,
                 timestamp=s["date"],
                 turns=tuple(
-                    Turn("assistant" if t["speaker"] == "ai_agent" else "user", t["message"])
+                    Turn(SPEAKER_ROLE[t["speaker"]], t["message"])
                     for t in s["conversation"]
-                    if t.get("speaker") in ("ai_agent", "user")
+                    if t.get("speaker") in SPEAKER_ROLE
                 ),
                 display={"session_id": s["session_id"], "date": s["date"]},
             )
@@ -99,6 +107,9 @@ class MemoraBenchmark(Benchmark):
     def render(self, case: Case, query: Query, ctx: MemoryContext) -> list[dict[str, str]]:
         off = self._official()
         builder = off.PromptBuilder(model_name=None)
+        # "user" is the only human label the official builder prints; "user_agent" (the label
+        # in the released data) is silently skipped by it.
+        human = "user_agent" if self.params.get("drop_user_turns", False) else "user"
         if ctx.text is not None:
             context = ctx.text
         else:
@@ -107,7 +118,7 @@ class MemoraBenchmark(Benchmark):
                     "session_id": s.display["session_id"],
                     "date": s.display["date"],
                     "conversation": [
-                        {"speaker": "ai_agent" if t.role == "assistant" else "user", "message": t.content} for t in s.turns
+                        {"speaker": "ai_agent" if t.role == "assistant" else human, "message": t.content} for t in s.turns
                     ],
                 }
                 for s in ctx.sessions or []
@@ -124,6 +135,7 @@ class MemoraBenchmark(Benchmark):
             "personas": self.params.get("personas") or "all",
             "official": check_official_checkout("memora"),
             "pass_question_date": bool(self.params.get("pass_question_date", False)),
+            "drop_user_turns": bool(self.params.get("drop_user_turns", False)),
             "prompt_source": f"{EVALUATOR}: PromptBuilder",
             "metric_source": f"{EVALUATOR}: ModelEvaluator, fama_score",
         }

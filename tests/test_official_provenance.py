@@ -54,7 +54,8 @@ def test_stale_prompt_is_official_build_prompts():
 
 @needs_memora
 def test_memora_loader_hides_annotations_and_prompt_matches_official():
-    b = make_benchmark("memora", {"periods": ["weekly"], "personas": ["academic_researcher"]})
+    # drop_user_turns reproduces the official Track 1 prompt, which prints no user turn
+    b = make_benchmark("memora", {"periods": ["weekly"], "personas": ["academic_researcher"], "drop_user_turns": True})
     case = next(b.cases())
     assert len(case.queries) == 15
     q = case.queries[0]
@@ -71,6 +72,20 @@ def test_memora_loader_hides_annotations_and_prompt_matches_official():
         ctx, _ = pb.build_conversation_context(convs)
         sys_p, user_p = pb.build_question_prompt(ctx, q.text, None)
     assert msgs == [{"role": "system", "content": sys_p}, {"role": "user", "content": user_p}]
+
+
+@needs_memora
+def test_memora_keeps_user_turns_for_memory_and_default_prompt():
+    b = make_benchmark("memora", {"periods": ["weekly"], "personas": ["academic_researcher"]})
+    case = next(b.cases())
+    roles = [t.role for s in case.sessions for t in s.turns]
+    assert roles.count("user") == 1220 and roles.count("assistant") == 1296
+    text = b.render(case, case.queries[0], MemoryContext(sessions=case.sessions))[1]["content"]
+    # +1: the official question prompt itself contains one "User:" line
+    assert text.count("\nUser: ") == 1220 + 1 and text.count("\nAssistant: ") == 1296
+    dropped = make_benchmark("memora", {"periods": ["weekly"], "personas": ["academic_researcher"], "drop_user_turns": True})
+    text = dropped.render(case, case.queries[0], MemoryContext(sessions=case.sessions))[1]["content"]
+    assert text.count("\nUser: ") == 1
 
 
 @needs_memora

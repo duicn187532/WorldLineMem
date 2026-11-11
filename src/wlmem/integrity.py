@@ -103,6 +103,8 @@ def verify_memora(lines: list[str]) -> bool:
         ok &= _check(bad_q == 0, f"Memora {period}: {nq} questions per persona", lines)
         ok &= _check(late == 0, f"Memora {period}: no session dated after any question", lines)
         lines.append(f"[INFO] Memora {period}: sessions per persona {min(sizes)}-{max(sizes)}")
+    lines.append("[QUIRK] Memora: the human side is labelled 'user_agent'; the official Track 1 PromptBuilder "
+                 "prints only 'ai_agent' and 'user', so its prompt has no user turns (see drop_user_turns)")
     return ok
 
 

@@ -31,7 +31,9 @@ case_ids = ["..."]                # explicit cases (optional)
 # longmemeval: variant = "oracle" | "s"; history_format = "json" | "nl"; cot = false;
 #              question_types = [...]; exclude_future_sessions = false
 # memora:      periods = ["weekly", "monthly", "quarterly"]; personas = [...];
-#              question_limit = N; pass_question_date = false
+#              question_limit = N; pass_question_date = false;
+#              drop_user_turns = false (true reproduces the official Track 1 prompt, which
+#              prints no user turn; see docs/BENCHMARK_MATRIX.md)
 
 [memory]
 method = "no_memory" | "full_context" | "rag" | <your registered method>

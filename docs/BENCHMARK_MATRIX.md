@@ -59,6 +59,10 @@
 - **已知問題**：
   - 官方 Track 1 讀的是 `question_data['session_date']`，但公開資料沒有這個欄位，所以官方 prompt 裡實際上沒有「今天日期」。本框架預設照官方行為（`pass_question_date=false`），可切換。
   - 標註欄位 `share_memory`、`session_type`、`operation` 等同部分標準答案，本框架不提供給記憶方法。
+  - **官方 Track 1 的 prompt 沒有任何使用者發言。** 公開資料把使用者標成 `user_agent`，但官方 `PromptBuilder` 只輸出 `ai_agent` 和 `user`，所以完整歷史裡只剩助理的發言（academic_researcher weekly：助理 1,296 句，使用者 0 句）。官方 Track 2 的記憶 agent 則有正確對應。本框架的處理：
+    - 記憶方法一律收到雙方發言。
+    - 作答 prompt 預設顯示雙方發言；設定 `drop_user_turns = true` 可以逐字重現官方 Track 1 的 prompt。
+    - 2026-11-11 之前，本框架的讀取程式也漏掉了使用者發言，當時的 Memora smoke test 是在這個錯誤下跑的。
 
 ## LongMemEval（P0）
 
