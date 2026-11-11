@@ -5,10 +5,14 @@
 
 ## 1. 暫定題目
 
-- 中文：《無狀態持續型智能體在世界線變動偵測後之選擇性記憶調整》
-- English: *Selective Memory Adaptation for Stateless Persistent Agents under World-State Changes*
+2026-11-11 起的暫定題目（benchmark 規格確定後再定案）：
 
-題目會依研究進展調整。
+- 中文：《情境未標註下智能體的情境變動偵測與選擇性記憶利用》
+- English: *Context-Shift Detection and Selective Memory Utilization for LLM Agents under Unlabeled Interaction Contexts*
+- 前提：論文必須包含情境變動偵測的元件與評估。若之後把偵測降為次要，改用《無情境標註之持續互動中智能體的選擇性記憶利用》。
+- 「世界線」不放進題目，只在第一章作為研究動機的比喻，並定義為「人 × 場景的互動情境」。
+
+先前的題目：《無狀態持續型智能體在世界線變動偵測後之選擇性記憶調整》、《動態世界狀態下的智能體選擇性記憶利用》。
 
 ## 2. 研究問題
 
