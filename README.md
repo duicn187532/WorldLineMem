@@ -12,7 +12,8 @@
 | [docs/EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md) | 資料隔離、公平比較、judge 驗證、可重現規則 |
 | [docs/MIXED_MEMORY_PROTOCOL.md](docs/MIXED_MEMORY_PROTOCOL.md) | 自建的混合記憶庫協定（多人共用一個記憶庫），不是官方 benchmark |
 | [docs/DIAGNOSTICS.md](docs/DIAGNOSTICS.md) | 收斂研究問題用的診斷實驗（目前：STALE × 時間衰退、Pragma 的喚醒） |
-| [docs/DECISION_GATES.md](docs/DECISION_GATES.md) | 決定研究重心的判斷門檻（預先登記；實驗 A、B） |
+| [docs/DECISION_GATES.md](docs/DECISION_GATES.md) | 決定研究重心的判斷門檻（已停用） |
+| [docs/READING_LIST.md](docs/READING_LIST.md) | 研究者親自閱讀的文獻清單 |
 | [docs/VALIDATION_REPORT.md](docs/VALIDATION_REPORT.md) | 已完成、已測通、未完成與阻塞的項目 |
 | [configs/README.md](configs/README.md) | 設定檔各欄位說明 |
 
