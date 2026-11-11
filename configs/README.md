@@ -46,6 +46,9 @@ method = "no_memory" | "full_context" | "rag" | <your registered method>
 #      max_context_tokens; query_instruction
 # full_context and rag: scope = "global" | "context". "context" keeps only sessions whose
 #      context signal equals the question's (hard isolation; needs a benchmark that gives a signal)
+# rag: decay = { lambda_base, beta, mu, importance, initial, mode = "multiply" | "dormant",
+#      dormant_threshold }. FadeMem decay curve only (eq. 4-6), no reinforcement, no conflict
+#      resolution; label results accordingly. See docs/DIAGNOSTICS.md.
 
 [answer_model]                    # the reader that writes the final answer
 backend = "ollama"

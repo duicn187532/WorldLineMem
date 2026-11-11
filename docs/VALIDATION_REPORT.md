@@ -26,7 +26,7 @@
 | 官方 repo checkout（STALE、LongMemEval、Memora、LoCoMo、MemoryAgentBench） | 五個都在鎖定的 commit |
 | 資料 sha256（STALE、LongMemEval oracle 與 S）、Memora 資料目錄雜湊（27,644 個檔案） | 全部吻合 |
 | `wlmem verify-data`：題數與結構 | STALE 400（T1 200／T2 200）、LongMemEval 500×2、Memora 10 個 persona × 3 種長度 |
-| 單元測試 `pytest` | 21 個全部通過 |
+| 單元測試 `pytest` | 24 個全部通過 |
 | 本框架產生的 STALE prompt 與官方程式產生的逐字相同；Memora 在 `drop_user_turns = true` 時逐字相同 | 通過（`test_official_provenance.py`） |
 | LongMemEval 複製過來的 prompt 模板在官方檔案中逐字存在 | 通過 |
 | 案例之間記憶隔離、依時間順序 ingest、提問前只看得到已發生的 session | 通過（`test_runner_protocol.py`） |
@@ -36,6 +36,8 @@
 | 混合記憶庫協定：1 人時與官方 Memora prompt 逐字相同；每個人的 session 順序不變；persona 名稱不外露；提問在本人最後一個區塊之後；相同 seed 產生相同對話流 | 通過（`test_memora_mixed.py`） |
 | 依訊號隔離（`scope = "context"`）只取到本人的記憶；沒有訊號時報錯 | 通過 |
 | 自建協定的結果標籤自動加上 `derived_protocol:` | 通過 |
+| FadeMem 衰退曲線的半衰期與論文一致（β=0.8 約 11.25 天、β=1.2 約 5.02 天） | 通過（`test_decay.py`） |
+| STALE × 衰退的檢索層診斷（400 個案例，確定性） | 完成，見 DIAGNOSTICS.md §1 |
 | 輸入過長的處理：`truncate:false` | Ollama 會回錯誤並附上精確 token 數，不會截斷；`wlmem check-ollama` 可以驗證 |
 
 ## 3. Smoke test 結果（工程驗證，分數沒有意義）

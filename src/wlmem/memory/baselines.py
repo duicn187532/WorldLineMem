@@ -23,6 +23,7 @@ import numpy as np
 from ..textutil import BM25, estimate_tokens
 from ..types import MemoryContext, Query, Session, Turn
 from .base import MemoryAdapter, register
+from .decay import DecayCurve, days_between, parse_time
 
 
 def session_text(turns: tuple[Turn, ...] | list[Turn]) -> str:
@@ -121,6 +122,14 @@ class RAG(MemoryAdapter):
         top_k               number of units returned
         max_context_tokens  optional budget; lowest-ranked units are dropped first
         query_instruction   optional prefix for dense query embedding (model specific)
+        scope               "global" | "context" (see module docstring)
+        decay               optional table: FadeMem decay curve only (memory/decay.py):
+                            lambda_base, beta, mu, importance, initial, plus
+                            mode = "multiply" (rank by relevance x strength) or
+                            "dormant" (drop units whose strength < dormant_threshold).
+                            Time is the session timestamp; "now" is Query.asked_at, or the
+                            latest ingested session when the benchmark gives no question time.
+                            No access reinforcement: retrieval never changes strength.
     Retrieved units are regrouped into their sessions and returned in chronological order.
     """
 
@@ -137,6 +146,13 @@ class RAG(MemoryAdapter):
             raise ValueError("retriever must be 'bm25' or 'dense'")
         if r == "dense" and self.services.embedder is None:
             raise ValueError("retriever='dense' needs an [embedding] section in the config")
+        dp = self.params.get("decay")
+        self.decay = DecayCurve.from_params(dp)
+        self.decay_mode = (dp or {}).get("mode", "multiply")
+        if self.decay_mode not in ("multiply", "dormant"):
+            raise ValueError("decay.mode must be 'multiply' or 'dormant'")
+        self.dormant_threshold = float((dp or {}).get("dormant_threshold", 0.15))
+        self.latest = None
 
     def _split(self, s: Session) -> list[_Unit]:
         if self.params.get("granularity", "round") == "session":
@@ -151,6 +167,9 @@ class RAG(MemoryAdapter):
         return units
 
     def ingest(self, session: Session) -> None:
+        t = parse_time(session.timestamp)
+        if t is not None and (self.latest is None or t > self.latest):
+            self.latest = t
         new = self._split(session)
         self.units.extend(new)
         if self.params.get("retriever", "bm25") == "bm25":
@@ -168,10 +187,19 @@ class RAG(MemoryAdapter):
         else:
             q = (self.params.get("query_instruction") or "") + query.text
             qv = _normalise(np.asarray(self.services.embedder.embed([q])[0], dtype=np.float32))
-            scores = np.stack(self.vecs) @ qv
+            scores = (np.stack(self.vecs) @ qv + 1.0) / 2.0  # cosine mapped to [0, 1] so decay can scale it
+        strengths = None
+        if self.decay is not None:
+            now = parse_time(query.asked_at) or self.latest
+            strengths = np.asarray([self.decay.strength(days_between(parse_time(u.session.timestamp), now))
+                                    for u in self.units])
+            if self.decay_mode == "multiply":
+                scores = scores * strengths
+            else:
+                scores = np.where(strengths >= self.dormant_threshold, scores, -np.inf)
         k = int(self.params.get("top_k", 10))
         order = [int(i) for i in np.argsort(-scores, kind="stable")
-                 if _in_scope(self.params, self.units[int(i)].session, query)][:k]
+                 if np.isfinite(scores[int(i)]) and _in_scope(self.params, self.units[int(i)].session, query)][:k]
         budget = self.params.get("max_context_tokens")
         picked, used = [], 0
         for i in order:
@@ -196,6 +224,9 @@ class RAG(MemoryAdapter):
                 "units": len(self.units),
                 "returned_units": len(picked),
                 "top_scores": [round(float(scores[i]), 4) for i in picked[:5]],
+                **({"dormant_units": int(np.sum(strengths < self.dormant_threshold)),
+                    "min_returned_strength": round(float(min(strengths[i] for i in picked)), 4) if picked else None}
+                   if strengths is not None else {}),
                 "est_history_tokens": used,
             },
         )

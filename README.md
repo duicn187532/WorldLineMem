@@ -11,6 +11,7 @@
 | [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md) | 已驗證的開發環境、本機盤點方式、Windows 注意事項 |
 | [docs/EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md) | 資料隔離、公平比較、judge 驗證、可重現規則 |
 | [docs/MIXED_MEMORY_PROTOCOL.md](docs/MIXED_MEMORY_PROTOCOL.md) | 自建的混合記憶庫協定（多人共用一個記憶庫），不是官方 benchmark |
+| [docs/DIAGNOSTICS.md](docs/DIAGNOSTICS.md) | 收斂研究問題用的診斷實驗（目前：STALE × 時間衰退） |
 | [docs/VALIDATION_REPORT.md](docs/VALIDATION_REPORT.md) | 已完成、已測通、未完成與阻塞的項目 |
 | [configs/README.md](configs/README.md) | 設定檔各欄位說明 |
 

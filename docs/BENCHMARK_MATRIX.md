@@ -20,6 +20,8 @@
 | MemoryAgentBench | P1 | Partially Verified | github.com/HUST-AI-HYZ/MemoryAgentBench @`5380260`；HF `ai-hyz/MemoryAgentBench` | MIT | 四類：AR／TTL／LRU／CR；CR 是作者自建的 FactConsolidation（SH／MH） | CR 用 `substring_exact_match`，不需要 LLM judge | 可行；尚未接入 runner |
 | SCALE-QA | P1（新增） | Partially Verified | github.com/LordTARN1SHED/SCALE-QA @`932193c`（v1.1.0，資料在 repo 內；論文結論段指定） | 資料與文件 CC-BY-4.0；TSIM 程式 Apache-2.0；內附的干擾對話取自 UltraChat（MIT） | 3,000 題四選一，10 個領域各 300 題；歷史長度由官方 builder 指定（16k 至 1M） | 選項準確率，**不需要 LLM judge** | 可行；尚未接入 runner |
 | GateMem | P1（新增） | Partially Verified | github.com/rzhub/GateMem @`a983828`；HF `Ray368/GateMem`（兩處資料檔大小相同） | 程式 MIT；資料 CC-BY-4.0 | 91 個多人情節、2,218 個檢查點：utility 728、access control 727、active forgetting 763 | GPT-4o judge；主指標 MGS = U·(1−A)·(1−F) | 可行（每個情節平均約 3,900 個英文詞）；尚未接入 runner；本研究只會用到 utility 子集 |
+| ValidMem（MemFSM） | 候選（未鎖定） | 已下載檢查 | HF `Zhou11Alex/ValidMem` | CC-BY-4.0 | 466 個案例、1,393 條記憶；**每個案例只有 2–5 條記憶** | 多選或 LLM judge；需同時答對「現在」與「歷史」提問 | 可行，但量不到衰退與喚醒；README 與資料欄位不一致（見 RESEARCH_SCOPE §9.2） |
+| MemConflict | 候選（未鎖定） | 未下載 | github.com/TaoZhen1110/MemConflict（論文所列） | 未確認 | 動態、靜態、條件三種衝突 | 答案正確率與檢索排名 | 未評估 |
 | FadeMem 使用的資料 | — | **Unavailable**（LTI-Bench） | 論文 arXiv:2601.18642v2；找不到程式或資料連結 | — | LTI-Bench 10,780 條序列（自建、未公開）；MSC、LoCoMo 是既有公開資料 | RP@10、TCS、FCR、SRR（作者自訂） | LTI-Bench 無法取得；MSC 與 LoCoMo 可取得，但作者的評分程式未公開 |
 | AOEP-v0（Always-On Agents） | 暫不列入 | **Unavailable** | arXiv:2606.30306；論文說明它是「參考設計 + 小型試驗，不是排行榜」 | — | — | 確定性規則檢查（論文描述） | 沒有釋出 harness 或資料 |
 

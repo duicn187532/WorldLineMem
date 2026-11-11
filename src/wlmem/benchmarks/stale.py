@@ -56,6 +56,8 @@ class StaleBenchmark(Benchmark):
                     query_id=f"{uid}#{d}",
                     text=r["probing_queries"][f"{d}_query"],
                     visible_sessions=len(sessions),
+                    # STALE gives no question time; the probes follow the last session
+                    asked_at=r["timestamps"][-1] if r["timestamps"] else None,
                     meta={"dim": d},
                 )
                 for d in DIMS
