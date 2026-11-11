@@ -58,6 +58,16 @@ Memora 這一列是修正「讀取程式漏掉使用者發言」之後重跑的�
 
 所有測試都確認了：資料可以讀取、session 依時間順序輸入、模型能回答、官方評分程式能輸出、日誌與 manifest 都有寫出。
 
+### 3.x 實驗 B 腳本（`scripts/measure_pragma_curator.py`）的流程檢查（2026-11-11）
+
+- 設定：qwen3:0.6b（CPU）、Pragma @`e53eace`、STALE 1 個案例（T2，舊證據在第 0 個 session、新證據在第 31 個）。標籤 `smoke_test`。
+- 跑通：32 次情節整理、5 次 Curator 呼叫，約 18 分鐘；沒有解析失敗、沒有退回確定性選擇、沒有退化情節；`cases.jsonl`、`summary.json`、`manifest.json` 都正確寫出。快取生效：重跑時整理呼叫為 0。
+- 核對：重新詮釋目標的計算正確（舊記憶在相近度排第 9，不在前 3）。
+- 發現兩個問題，已處理並提議修正前置條件（DECISION_GATES.md §7.1）：
+  1. 28% 的情節照抄 Pragma 整理提示的示範句，Pragma 的檢查抓不到。已加入 `echo_episode_share` 偵測。
+  2. 溫度 0、固定 seed 下，Curator 重跑 4 次有 1 次選擇不同。已把每輪的原始回覆、候選和選擇寫進 `cases.jsonl`，供重現性檢查使用。
+- 0.6B 模型的 Curator 理由與對話無關（例如提到「避免週五發布」），重要度只給 0.7–0.9。這印證了前置條件 0c、0d 的必要性。
+
 ## 4. smoke test 發現的問題：小型 judge 不可靠
 
 smoke test 裡的分數不能採信，原因不只是題數太少，而是 judge 本身會判錯：

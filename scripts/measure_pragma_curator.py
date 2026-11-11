@@ -196,6 +196,26 @@ class Consolidator:
         return ep
 
 
+_WORDS = re.compile(r"[a-z0-9]+")
+
+
+def _shingles(text: str, n: int = 6) -> set[tuple[str, ...]]:
+    w = _WORDS.findall(text.lower())
+    return {tuple(w[i:i + n]) for i in range(len(w) - n + 1)}
+
+
+def echoes_prompt(ep: dict, prompt_grams: set, transcript: str) -> bool:
+    """The episode copies wording from the consolidation prompt that is not in the session.
+
+    Small models parrot the prompt's own examples ("Recorded a production outage caused by a
+    Friday deploy; lesson: never release on Friday") as if they were the session. Pragma only
+    catches literal '...' placeholders, so these episodes are not marked degraded. Any 6-word
+    span shared with the prompt and absent from the transcript counts.
+    """
+    own = _shingles(" ".join([ep["goal"], ep["narrative"], ep["interpretation"]]))
+    return bool(own & (prompt_grams - _shingles(transcript)))
+
+
 def transcript_of(session) -> str:
     return "\n".join(f"{'USER' if t.role == 'user' else 'ASSISTANT'}: {t.content}" for t in session.turns)
 
@@ -263,9 +283,11 @@ def ask_curator(p: Pragma, chat, task: str, cards: list[str], today, max_tokens:
                       json_mode=True, max_tokens=max_tokens)
     except Exception as e:  # noqa: BLE001
         return None, f"{type(e).__name__}: {str(e)[:160]}", {}
+    ask_curator.last_raw = r.text
     data = extract_json(r.text)
     if not isinstance(data, dict):
         return None, "reply was not JSON: " + " ".join(r.text.split())[:120], {}
+    ask_curator.last_raw = r.text
     sel = data.get("selected", [])
     if not isinstance(sel, list):
         return [], _text(data.get("reason")), {}
@@ -290,7 +312,10 @@ def ask_curator(p: Pragma, chat, task: str, cards: list[str], today, max_tokens:
 def run_case(p: Pragma, chat, consolidate: Consolidator, case, max_tokens: int) -> dict:
     o, n = case.gold["relevant_session_index"][:2]
     sessions = case.sessions[:n + 1]
-    eps = [consolidate(transcript_of(s)) for s in sessions]
+    transcripts = [transcript_of(s) for s in sessions]
+    eps = [consolidate(tx) for tx in transcripts]
+    prompt_grams = _shingles(p.episode_system)
+    echo = [echoes_prompt(ep, prompt_grams, tx) for ep, tx in zip(eps, transcripts)]
     today = parse_time(sessions[n].timestamp)
     stamps = [s.timestamp or "" for s in sessions]
     times = [parse_time(s.timestamp) for s in sessions]
@@ -303,6 +328,7 @@ def run_case(p: Pragma, chat, consolidate: Consolidator, case, max_tokens: int) 
     for t_i, turn in enumerate(t for t in sessions[n].turns if t.role == "user"):
         cand = candidates(p, turn.content, past, eps, eff, stamps, desk)
         cards = [card(p, f"E{i}", eps[j], j in dormant, times[j], today) for i, j in enumerate(cand, 1)]
+        ask_curator.last_raw = ""
         refs, reason, uses = ask_curator(p, chat, turn.content, cards, today, max_tokens) if cand else ([], "", {})
         fallback = refs is None
         if fallback:  # curator._fallback
@@ -320,7 +346,8 @@ def run_case(p: Pragma, chat, consolidate: Consolidator, case, max_tokens: int) 
                       "o_dormant_tag": in_cand and o_was_dormant,
                       "selected": picked, "use": uses.get(f"E{cand.index(o) + 1}") if picked else None,
                       "n_candidates": len(cand), "n_selected": len(chosen), "fallback": fallback,
-                      "reason": reason})
+                      "reason": reason, "raw_reply": ask_curator.last_raw,
+                      "candidates": cand, "chosen": chosen})
     # reconsolidation targets after the session (keyword path, >=2 shared words, top 3 active)
     q = p.tokens(episode_text(eps[n]))
     active = [j for j in past if j not in dormant]
@@ -331,7 +358,8 @@ def run_case(p: Pragma, chat, consolidate: Consolidator, case, max_tokens: int) 
             "offered_any": offered_o, "selected_any": selected_o,
             "selected_any_model_only": any(t["selected"] and not t["fallback"] for t in turns),
             "reach": o in targets, "turns": turns,
-            "degraded_episodes": sum(ep["degraded"] for ep in eps)}
+            "degraded_episodes": sum(ep["degraded"] for ep in eps),
+            "echo_episodes": sum(echo), "o_echo": echo[o], "n_echo": echo[n]}
 
 
 def summarize(rows: list[dict]) -> dict:
@@ -356,6 +384,9 @@ def summarize(rows: list[dict]) -> dict:
         "use_labels_when_selected": {u: sum(t["use"] == u for t in turns if t["selected"])
                                      for u in ("substantive", "procedural", None)},
         "curator_fallback_turns": rate(sum(t["fallback"] for t in turns), len(turns)),
+        "echo_episode_share": round(sum(r.get("echo_episodes", 0) for r in rows)
+                                    / max(1, sum(r["n"] + 1 for r in rows)), 4),
+        "echo_in_o_or_n": rate(sum(bool(r.get("o_echo") or r.get("n_echo")) for r in rows), len(rows)),
         "degraded_episode_share": round(sum(r["degraded_episodes"] for r in rows)
                                         / max(1, sum(r["n"] + 1 for r in rows)), 4),
     }
@@ -412,6 +443,8 @@ def main() -> int:
         print(f"[{i}/{len(cases)}] {case.case_id} offered={row['offered_any']} selected={row['selected_any']} "
               f"reach={row['reach']} ({time.time() - t0:.0f}s, consolidation calls {consolidate.calls})", flush=True)
     rows = [r for r in rows if r["uid"] in set(meta["case_ids"])]
+    if any("echo_episodes" not in r for r in rows):
+        print("NOTE: some cases were run before echo detection; their echo counts read as 0")
     summary = summarize(rows)
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
