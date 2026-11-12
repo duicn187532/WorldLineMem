@@ -15,6 +15,7 @@
 | [docs/DECISION_GATES.md](docs/DECISION_GATES.md) | 決定研究重心的判斷門檻（已停用） |
 | [docs/READING_LIST.md](docs/READING_LIST.md) | 研究者親自閱讀的文獻清單 |
 | [docs/BENCHMARK_SPEC.md](docs/BENCHMARK_SPEC.md) | 情境未標註記憶基準的規格草案 |
+| [docs/WORLD_SCHEMA.md](docs/WORLD_SCHEMA.md) | 世界設定資料格式草案 |
 | [docs/VALIDATION_REPORT.md](docs/VALIDATION_REPORT.md) | 已完成、已測通、未完成與阻塞的項目 |
 | [configs/README.md](configs/README.md) | 設定檔各欄位說明 |
 
