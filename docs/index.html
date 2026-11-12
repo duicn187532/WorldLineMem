@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>論文研究進度總覽</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column with a sticky section bar; tables scroll inside their own boxes. */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --fg:#1d2a2e; --muted:#5b6b70; --line:#d8e0e1;
+  --accent:#0f6b6b; --accent-soft:#e2f0ef; --warn:#9a5b00; --warn-soft:#fbf0dc; --ok:#2f7a3a; --ok-soft:#e3f2e5;
+  --font-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121a1c; --surface:#1a2427; --fg:#e3ebec; --muted:#9db0b4; --line:#2c3a3d;
+  --accent:#5cc4bf; --accent-soft:#1d3634; --warn:#e3a54a; --warn-soft:#3a2e1a; --ok:#7cc987; --ok-soft:#1e3322; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121a1c; --surface:#1a2427; --fg:#e3ebec; --muted:#9db0b4; --line:#2c3a3d;
+  --accent:#5cc4bf; --accent-soft:#1d3634; --warn:#e3a54a; --warn-soft:#3a2e1a; --ok:#7cc987; --ok-soft:#1e3322; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.7}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+header.top{padding-block:32px 16px;display:grid;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.08em;color:var(--muted)}
+h1{font-size:26px;line-height:1.35;margin:0;text-wrap:balance}
+.en{color:var(--muted);font-size:13px}
+nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-block:1px solid var(--line)}
+nav.bar .in{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.bar a{flex:none;padding:10px 10px;color:var(--muted);text-decoration:none;font-size:14px;border-bottom:2px solid transparent}
+nav.bar a:hover,nav.bar a:focus-visible{color:var(--accent);border-bottom-color:var(--accent);outline:none}
+section{padding-top:36px;scroll-margin-top:56px;display:grid;gap:14px}
+h2{font-size:20px;margin:0;text-wrap:balance}
+h3{font-size:16px;margin:8px 0 0}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0;display:grid;gap:6px;align-content:start}
+.box .k{font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:.04em}
+.box b{font-weight:700}
+.note{background:var(--accent-soft);border-radius:8px;padding:12px 16px}
+.risk{background:var(--warn-soft);border-radius:8px;padding:12px 16px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:13px;background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mono{font-family:var(--font-mono);font-size:13px}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-warn{background:var(--warn-soft);color:var(--warn)}
+.p-acc{background:var(--accent-soft);color:var(--accent)}
+ol.tl{list-style:none;margin:0;padding:0;display:grid;gap:0;border-left:2px solid var(--line)}
+ol.tl li{padding:0 0 14px 16px;position:relative}
+ol.tl li::before{content:"";position:absolute;left:-6px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+ol.tl .d{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.sched td:first-child{white-space:nowrap}
+.sched tr.meet td{background:var(--accent-soft)}
+.sched tr.done td{color:var(--muted)}
+.sched tr.done .task{text-decoration:line-through}
+.sched input{width:18px;height:18px;accent-color:var(--accent)}
+.prog{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.prog .track{flex:1;max-width:280px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog .fill{height:100%;background:var(--accent);width:0}
+pre.mail{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:0;font-family:var(--font-body);font-size:14px;line-height:1.8;max-width:72ch}
+button{font:inherit;font-size:14px;padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer;justify-self:start}
+button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+ul{margin:0;padding-left:1.3em;display:grid;gap:4px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">碩士論文研究　·　更新於 2026-11-12</div>
+  <h1>情境未標註下智能體的情境變動偵測與選擇性記憶利用</h1>
+  <div class="en">Context-Shift Detection and Selective Memory Utilization for LLM Agents under Unlabeled Interaction Contexts</div>
+</header>
+</div>
+<nav class="bar" aria-label="章節"><div class="in">
+  <a href="#now">現況</a><a href="#problem">研究問題</a><a href="#history">這一個月</a><a href="#evidence">關鍵數據</a><a href="#decisions">已決定</a><a href="#bench">Benchmark</a><a href="#schedule">每日進度</a><a href="#advisor">老師面談</a><a href="#files">文件</a>
+</div></nav>
+<div class="wrap">
+
+<section id="now">
+  <h2>現況一覽</h2>
+  <div class="grid">
+    <div class="box"><span class="k">題目</span><b>已確認</b><span>2026-11-12 確認維持。前提是論文要包含情境變動偵測及其評估。</span></div>
+    <div class="box"><span class="k">定位</span><b>情境依存的記憶抑制</b><span>從遺忘出發：記憶不是被刪除，而是在不對的情境中不該被取用。</span></div>
+    <div class="box"><span class="k">Benchmark</span><b>規格 v0.3、資料格式 v0.2</b><span>四類場景、2–60 人、中英雙語；還沒開始生成資料。</span></div>
+    <div class="box"><span class="k">下一步</span><b>讀論文、約老師面談</b><span>先讀 3 篇定位論文，下週面談。</span></div>
+  </div>
+  <div class="risk"><b>最大風險：</b>只看文字時，判斷「換人了沒」和「是誰」接近隨機（見<a href="#evidence">關鍵數據</a>）。如果偵測做不起來，改用備用題目《無情境標註之持續互動中智能體的選擇性記憶利用》。</div>
+</section>
+
+<section id="problem">
+  <h2>研究問題</h2>
+  <p>同一個代理、同一份記憶，在連續的文字互動中服務不同的人和場景，而且沒有身分標籤、場景標籤或對話分段。「世界線」只是第一章的比喻，指「人 × 場景」構成的互動情境。</p>
+  <div class="grid">
+    <div class="box"><span class="k">C1</span><b>情境變動偵測</b><span>互動情境什麼時候換了。</span></div>
+    <div class="box"><span class="k">C2</span><b>長期歸屬</b><span>換到哪個情境：是之前出現過的人或場景，還是新的。</span></div>
+    <div class="box"><span class="k">C3</span><b>選擇性利用</b><span>用自己的記憶、避開別人的記憶、轉用可以遷移的記憶。</span></div>
+    <div class="box"><span class="k">C4</span><b>不確定時先確認</b><span>情境不明時先追問，不直接套用記憶。</span></div>
+  </div>
+  <div class="note">和既有研究的差異：只用文字、沒有身分或場景標籤、要長期認出回來的人，並且連到記憶使用的決策。SpeakerBind、EvoSpeakerMem、VoxPolyMem 靠聲紋，Bio-Memory 靠人臉或掌紋；MixUA 和 ShareMem 的使用者身分是已知的。</div>
+</section>
+
+<section id="history">
+  <h2>上次面談後的這一個月</h2>
+  <ol class="tl">
+    <li><div class="d">10 月中–11 月初</div>從記憶遺忘、時間有效性出發，查核 FadeMem、Pragma、STALE、Memora 等文獻，並實際跑診斷實驗。</li>
+    <li><div class="d">診斷結果</div>全域時間衰退會讓提問時取得新證據的比例大幅下降；多篇文獻在公開 benchmark 上也量不出遺忘對答題的效果。結論是遺忘研究的瓶頸在評估。</li>
+    <li><div class="d">11-10 前後</div>比較幾個可能方向後，研究者選定「多人多場景共用記憶、沒有情境標籤」（方向 5），並同意自建 benchmark。</li>
+    <li><div class="d">11-11</div>文獻查核：對話分離、聲紋說話人記憶、記憶適用範圍。確認沒有人同時做到「只用文字、沒有標籤、長期歸屬、記憶使用決策」。</li>
+    <li><div class="d">11-12</div>確認題目；訂定 benchmark 規格與世界設定格式；定位為「情境依存的記憶抑制」；整理閱讀清單。</li>
+  </ol>
+</section>
+
+<section id="evidence">
+  <h2>關鍵數據（本 repo 自己跑的診斷）</h2>
+  <p>都沒有呼叫語言模型，只用 TF-IDF 或嵌入向量相似度，代表「只看文字內容」的下限。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>資料</th><th>測什麼</th><th class="num">結果</th><th class="num">隨機猜</th></tr></thead>
+    <tbody>
+      <tr><td>Memora 混合（2 人）</td><td>換人偵測 AUC／認回舊人（整段）</td><td class="num">≈0.50／58%</td><td class="num">0.50／50%</td></tr>
+      <tr><td>Memora 混合（5 人）</td><td>同上</td><td class="num">≈0.47／29%</td><td class="num">0.50／20%</td></tr>
+      <tr><td>Memora 混合（10 人）</td><td>同上</td><td class="num">≈0.46／18%</td><td class="num">0.50／10%</td></tr>
+      <tr><td>GroupMemBench（6 位作者）</td><td>作者歸屬（中心點）</td><td class="num">55.8–58.2%</td><td class="num">16.7%</td></tr>
+      <tr><td>GroupMemBench（18 位作者）</td><td>作者歸屬（中心點）</td><td class="num">55.6–57.2%</td><td class="num">5.6%</td></tr>
+      <tr><td>GroupMemBench 區塊</td><td>最近的前一個區塊是同一人／同一頻道</td><td class="num">34.5%、26.2%／98–99%</td><td class="num">—</td></tr>
+      <tr><td>STALE × FadeMem 參數</td><td>全域衰退後，提問時取得新證據的比例</td><td class="num">65.1% → 6.3%</td><td class="num">—</td></tr>
+    </tbody>
+  </table></div>
+  <p>解讀：場景（頻道）幾乎一看就分得出來，難的是「人」這一軸。Memora 的對話內容幾乎不帶個人線索，不適合當主要資料；GroupMemBench 有可用的作者訊號，適合用來開發 C1／C2。</p>
+</section>
+
+<section id="decisions">
+  <h2>已決定事項</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>項目</th><th>決定</th></tr></thead>
+    <tbody>
+      <tr><td>題目</td><td>維持；「世界線」只當第一章的比喻</td></tr>
+      <tr><td>研究定位</td><td>情境依存的記憶抑制（選項 A）；FadeMem／Pragma 當作「記憶強度 ≠ 情境適用性」的對照組</td></tr>
+      <tr><td>本機模型</td><td>只是實驗的執行方式，不當作貢獻或特色</td></tr>
+      <tr><td>隱私</td><td>不在研究範圍內</td></tr>
+      <tr><td>引用</td><td>新穎性查核與相關研究要納入預印本；支撐論點的事實優先引用同儕審查文獻</td></tr>
+      <tr><td>事實會不會變</td><td>主實驗不變；「依情境過時」列為延伸</td></tr>
+      <tr><td>題目寫回記憶</td><td>不寫回</td></tr>
+      <tr><td>身分線索</td><td>中級為主，弱級當壓力測試；強級另做有名字／沒名字的對照</td></tr>
+      <tr><td>使用記憶的示範</td><td>保留，比例上限 15%，另做拿掉示範的消融</td></tr>
+    </tbody>
+  </table></div>
+  <h3>還沒決定</h3>
+  <ul>
+    <li>本機生成模型：要在 Z13 上實測速度，而且要和作答模型不同家族</li>
+    <li>TSHMem：查無此文，除非拿到連結，否則不引用</li>
+    <li>系所對引用來源的規定、論文時程：要問老師</li>
+  </ul>
+</section>
+
+<section id="bench">
+  <h2>Benchmark 設計摘要</h2>
+  <div class="grid">
+    <div class="box"><span class="k">場景</span><span>家庭事務、開放場域多功能工作（代理像在那裡工作的員工，有固定同事也有來往的人）、班級課程、公司多人秘書</span></div>
+    <div class="box"><span class="k">資料</span><span>GroupMemBench 改編（開發 C1／C2）＋自建（主實驗）；對話一律用本機模型生成</span></div>
+    <div class="box"><span class="k">規模</span><span>每個案例 2–60 人；人工抽查 10 案例 × 10 題</span></div>
+    <div class="box"><span class="k">語言</span><span>英文為原始語言；中文由研究者用訂閱的閉源模型全部翻譯</span></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>題型</th><th>測什麼</th><th>正確行為</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Q1</td><td>自己在這個情境的記憶</td><td>使用</td></tr>
+      <tr><td class="mono">Q2</td><td>同一個人、另一個場景</td><td>只用屬於「人」的記憶</td></tr>
+      <tr><td class="mono">Q3</td><td>同一個場景、另一個人</td><td>只用屬於「場景」的記憶</td></tr>
+      <tr><td class="mono">Q4</td><td>可遷移的記憶</td><td>轉用</td></tr>
+      <tr><td class="mono">Q5</td><td>陷阱：別人有類似的記憶</td><td>避開</td></tr>
+      <tr><td class="mono">Q6</td><td>情境不明</td><td>先確認</td></tr>
+      <tr><td class="mono">Q7</td><td>自己沒有相關資料</td><td>不答或先確認</td></tr>
+    </tbody>
+  </table></div>
+  <p>實驗條件：給標籤／只給邊界／什麼都不給（主要）。指標：邊界 F1／AUC、歸屬 B³ F1、切碎與汙染、誤用／漏用／遷移、確認行為。</p>
+</section>
+
+<section id="schedule">
+  <h2>每日進度（11/12–11/29）</h2>
+  <p>假設平日每天約 2–3 小時。第一級論文每篇抓一天，讀完在 <span class="mono">READING_LIST.md</span> 的「讀後」欄寫一句自己的判斷。勾選只存在你這台裝置的瀏覽器裡。</p>
+  <div class="prog"><span id="progTxt">0 / 0</span><div class="track"><div class="fill" id="progFill"></div></div></div>
+  <div class="tbl"><table class="sched">
+    <thead><tr><th>日期</th><th>工作</th><th>產出</th><th>完成</th></tr></thead>
+    <tbody id="sched"></tbody>
+  </table></div>
+  <div class="note">面談要約在讀完 1、2、7 之後：這樣被問到「和 SpeakerBind、MixUA 差在哪」時，你能用自己的話回答。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明即可。</div>
+</section>
+
+<section id="advisor">
+  <h2>老師面談</h2>
+  <h3>建議時程</h3>
+  <ul>
+    <li><b>11/12（今天）或 11/13：</b>寄信約時間，提議 11/19（四）或 11/20（五）</li>
+    <li><b>11/18：</b>準備 10 分鐘的報告材料（我可以幫你做成投影片）</li>
+    <li><b>面談後隔天：</b>把老師的意見記進 repo，調整後續計畫</li>
+  </ul>
+  <h3>報告順序（約 10 分鐘）</h3>
+  <ol>
+    <li>為什麼從遺忘轉到現在的方向：診斷數據與文獻顯示，遺忘的效果在現有 benchmark 上量不出來</li>
+    <li>新題目與 C1–C4；現在的題目仍是遺忘：依情境抑制記憶</li>
+    <li>和最接近的研究的差異（SpeakerBind、EvoSpeakerMem、MixUA、Bio-Memory）</li>
+    <li>可行性證據與最大風險：只看文字時歸屬很難；備用題目</li>
+    <li>自建 benchmark 的設計與規模</li>
+    <li>接下來兩個月的計畫</li>
+  </ol>
+  <h3>要請老師決定或給意見的事</h3>
+  <ul>
+    <li>新方向和題目是否可以接受</li>
+    <li>自建 benchmark 當作論文貢獻之一，是否可以接受</li>
+    <li>預印本可以引用到什麼程度；系所有沒有同儕審查文獻的比例規定</li>
+    <li>如果偵測（C1）效果不好，改用備用題目是否可以接受</li>
+    <li>計畫口試的時間點，以及中間的檢查點</li>
+    <li>人工抽查（約 100 題）能不能請實驗室同學協助</li>
+  </ul>
+  <h3>約時間的信（草稿，可直接改）</h3>
+  <pre class="mail" id="mail">老師您好：
+
+距離上次和您討論已經一個月，這段期間研究方向有比較大的調整，想跟您約時間報告並請教意見。
+
+簡要進展：
+1. 原本的記憶遺忘方向，我實際跑了診斷，也查核了相關文獻，發現遺忘機制在現有 benchmark 上幾乎量不出對答題的影響，評估本身是瓶頸。
+2. 因此把題目調整為《情境未標註下智能體的情境變動偵測與選擇性記憶利用》：同一個智能體在沒有身分或場景標籤的連續互動中服務多人、多場景，需要判斷情境是否改變，並依情境決定哪些記憶該用、哪些該抑制。這延續了原本遺忘的問題，只是改成「依情境抑制」，而不是「隨時間衰退」。
+3. 已完成文獻查核、可行性診斷，以及自建 benchmark 的規格草案。
+
+想請教的事主要有：新方向與題目是否合適、自建 benchmark 是否可作為貢獻之一，以及引用預印本的原則。
+
+不知道老師下週（11/19 或 11/20）是否方便？若這兩天不行，也請老師告訴我方便的時段，我配合調整。報告約 10 分鐘，討論視老師時間而定。
+
+謝謝老師。
+
+學生 敬上</pre>
+  <button type="button" id="copyMail">複製信件內容</button>
+</section>
+
+<section id="files">
+  <h2>文件位置</h2>
+  <p>所有文件都在 repo 的 <span class="mono">docs/</span> 資料夾：<a href="https://github.com/duicn187532/WorldLineMem/tree/main/docs" target="_blank" rel="noopener">在 GitHub 上開啟</a>。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>文件</th><th>內容</th></tr></thead>
+    <tbody id="files-body"></tbody>
+  </table></div>
+</section>
+</div>
+
+<script>
+(function(){
+  var base="https://github.com/duicn187532/WorldLineMem/blob/main/";
+  var files=[
+    ["docs/READING_LIST.md","閱讀清單（三級、閱讀順序、讀後欄）"],
+    ["docs/RESEARCH_SCOPE.md","研究範圍與所有文獻查核紀錄（§13–§17 為新方向）"],
+    ["docs/BENCHMARK_SPEC.md","Benchmark 規格 v0.3 與已決定事項"],
+    ["docs/WORLD_SCHEMA.md","世界設定資料格式 v0.2"],
+    ["docs/MIXED_MEMORY_PROTOCOL.md","多人混合記憶的評估協定與可行性結果"],
+    ["docs/DIAGNOSTICS.md","STALE／FadeMem 等診斷結果"],
+    ["docs/DECISION_GATES.md","舊方向的判斷門檻（已停用，留作紀錄）"]
+  ];
+  var fb=document.getElementById("files-body");
+  files.forEach(function(f){
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td class="mono"><a target="_blank" rel="noopener" href="'+base+f[0]+'">'+f[0].replace("docs/","")+'</a></td><td>'+f[1]+'</td>';
+    fb.appendChild(tr);
+  });
+
+  var rows=[
+    ["11/12 四","寄信約老師面談（草稿見下方）；瀏覽本頁","信件寄出",0],
+    ["11/13 五","#1 SpeakerBind：§3.1「文字線索是捷徑」的論證、只給文字時的結果","讀後一句話：文字線索在你的設定裡為什麼是訊號",0],
+    ["11/14 六","#2 EvoSpeakerMem：切碎與汙染的取捨、first-seen binding 評估協定","確認評估協定能否直接沿用",0],
+    ["11/15 日","#7 MixUA：四種記憶範圍的定義、限制章節是否提到群組或身分不明","確認有沒有被搶先",0],
+    ["11/16 一","寫一頁差異比較（1、2、7、Bio-Memory 對照本研究）","差異比較一頁",0],
+    ["11/17 二","#3 GroupMemBench：資料生成方式、提問者藏在「我」後面的題型","決定改編方式",0],
+    ["11/18 三","準備面談材料：10 分鐘報告","投影片或一頁摘要",0],
+    ["11/19 四","老師面談（目標日）；沒約到就讀 #4","面談紀錄",1],
+    ["11/20 五","面談備選日；#4 SCALE-QA／TSIM：串流切分規則（附錄 Table 15）","切分基準的候選",1],
+    ["11/21 六","整理老師意見，更新題目與計畫","更新 repo 文件",0],
+    ["11/22 日","#5 PairPref：成對設計、兩條評估軌","外部驗證是否可用",0],
+    ["11/23 一","#6 TANGLE：CPC 定義、CAAP 行動策略","C4「先確認」的設計依據",0],
+    ["11/24 二","#9 The Memory Trap：問題定義、寫入時與讀取時的誤用","論文問題定義草稿",0],
+    ["11/25 三","#8 ShareMem：§4.4 跨使用者偏好干擾的稽核","稽核方法可否借用",0],
+    ["11/26 四","#10 範圍回顧：§5.2.1 共用使用、§6.1 歸屬錯誤","第一章動機要點",0],
+    ["11/27 五","第二級：BOCPD、TextTiling（方法章節）","C1 候選方法清單",0],
+    ["11/28 六","第二級：黏性 HDP-HMM、中國餐館過程","C2 候選方法清單",0],
+    ["11/29 日","緩衝與回顧：補讀落後的部分，挑出 C1／C2 要先試的方法","下週開始方法設計",0]
+  ];
+  var KEY="thesis-sched-v1", done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+  var tb=document.getElementById("sched");
+  function upd(){
+    var n=0; rows.forEach(function(r,i){if(done[i])n++});
+    document.getElementById("progTxt").textContent="已完成 "+n+" / "+rows.length;
+    document.getElementById("progFill").style.width=(n/rows.length*100)+"%";
+  }
+  rows.forEach(function(r,i){
+    var tr=document.createElement("tr");
+    if(r[3])tr.className="meet";
+    if(done[i])tr.classList.add("done");
+    tr.innerHTML='<td class="mono">'+r[0]+'</td><td class="task">'+r[1]+'</td><td>'+r[2]+'</td><td><input type="checkbox" id="d'+i+'" aria-label="完成：'+r[0]+'"'+(done[i]?" checked":"")+'></td>';
+    tb.appendChild(tr);
+    tr.querySelector("input").addEventListener("change",function(ev){
+      done[i]=ev.target.checked; tr.classList.toggle("done",ev.target.checked);
+      try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}
+      upd();
+    });
+  });
+  upd();
+
+  var btn=document.getElementById("copyMail");
+  btn.addEventListener("click",function(){
+    var t=document.getElementById("mail").textContent;
+    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById("mail"));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="已選取，請按複製";}
+    try{navigator.clipboard.writeText(t).then(function(){btn.textContent="已複製"},sel)}catch(e){sel()}
+  });
+})();
+</script>
+</body>
+</html>
