@@ -1,0 +1,9 @@
+# Engineering check only (no model): the mock always selects E1.
+[run]
+name = "pragma_curator_mock"
+label = "smoke_test"
+
+[memory_model]
+backend = "mock"
+reply = '{"goal": "g", "narrative": "n", "surprises": [], "importance": 0.5, "outcome": "partial", "interpretation": "i", "keywords": ["k"], "selected": ["E1"], "uses": ["substantive"], "reason": "mock"}'
+max_tokens = 256

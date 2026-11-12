@@ -1,0 +1,43 @@
+# Smoke test of the mixed-store protocol (DERIVED, not an official benchmark; engineering check only).
+# Two people share one memory; the first 2 questions of each are asked.
+[run]
+name = "smoke_mixed_k2_none_rag_global"
+label = "smoke_test"
+seed = 42
+
+[benchmark]
+name = "memora_mixed"
+period = "weekly"
+personas = ["academic_researcher", "sales_manager"]
+group_size = 2
+context_signal = "none"
+question_limit = 2
+seed = 0
+
+[memory]
+method = "rag"
+granularity = "round"
+retriever = "bm25"
+top_k = 20
+max_context_tokens = 6000
+scope = "global"
+
+[answer_model]
+backend = "ollama"
+model = "qwen3:0.6b"          # tiny model: smoke tests check plumbing, not quality
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 256
+think = false
+
+[judge]
+backend = "ollama"
+model = "qwen3:0.6b"
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 8192
+num_predict = 512
+think = false

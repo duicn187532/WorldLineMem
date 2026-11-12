@@ -1,0 +1,36 @@
+# Smoke test (engineering check, NOT a benchmark score): 2 STALE cases x 3 probes, BM25 RAG.
+[run]
+name = "smoke_stale_rag_bm25"
+label = "smoke_test"
+seed = 42
+
+[benchmark]
+name = "stale"
+limit = 2
+
+[memory]
+method = "rag"
+granularity = "round"
+retriever = "bm25"
+top_k = 10
+max_context_tokens = 8000
+
+[answer_model]
+backend = "ollama"
+model = "qwen3:0.6b"          # tiny model: smoke tests check plumbing, not quality
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 256
+think = false
+
+[judge]
+backend = "ollama"
+model = "qwen3:0.6b"
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 8192
+num_predict = 512
+think = false

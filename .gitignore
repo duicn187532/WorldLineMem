@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv*/
+.pytest_cache/
+
+# Downloaded official repositories and datasets (fetched by scripts/setup_external.py)
+external/
+
+# Experiment outputs (keep them out of git; archive separately)
+runs/
+env_reports/
+.cache/
+
+# Secrets
+.env

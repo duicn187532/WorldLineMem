@@ -1,0 +1,39 @@
+# DIAGNOSTIC template: stale x rag_bm25 with FadeMem decay curve only, short-term layer (lambda 0.1/day, beta 1.2; half-life ~5 days).
+# Same answer model, judge and retrieval as stale__rag_bm25; only the decay table differs.
+# After evaluate: python scripts/decompose_stale_errors.py runs/<name>
+# Fill every CHANGE_ME value, then: wlmem run <this file>; wlmem evaluate <this file>
+[run]
+name = "stale__rag_bm25_decay_fademem_sml__CHANGE_ME_answer_model"
+label = "local_adaptation"
+seed = 42
+
+[benchmark]
+name = "stale"
+
+[memory]
+method = "rag"
+granularity = "round"
+retriever = "bm25"
+top_k = 20
+max_context_tokens = 12000
+decay = { lambda_base = 0.1, beta = 1.2, mode = "multiply" }   # FadeMem eq. 4-6 only (src/wlmem/memory/decay.py)
+
+[answer_model]
+backend = "ollama"
+model = "CHANGE_ME_answer_model"   # pick from `ollama list`; keep it fixed across all methods
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 32768
+num_predict = 512
+think = false
+
+[judge]
+backend = "ollama"
+model = "CHANGE_ME_judge_model"    # validate against human labels first (docs/EXPERIMENT_PROTOCOL.md §6)
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 1024
+think = false

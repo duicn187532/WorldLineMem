@@ -1,0 +1,43 @@
+# DERIVED PROTOCOL template (not an official benchmark): 10 people, identity given, hard isolation by identity (oracle reference, not a method).
+# See docs/MIXED_MEMORY_PROTOCOL.md. Report group_size, context_signal, seed and lead_in_sessions with every number.
+# Fill every CHANGE_ME value, then: wlmem run <this file>; wlmem evaluate <this file>
+[run]
+name = "mixed_k10_label__rag_bm25_scoped__seed0__CHANGE_ME_answer_model"
+label = "local_adaptation"
+seed = 42
+
+[benchmark]
+name = "memora_mixed"
+period = "weekly"
+group_size = 10
+context_signal = "label"
+lead_in_sessions = 1
+seed = 0            # use at least 3 seeds for reported numbers (new [run] name per seed)
+
+[memory]
+method = "rag"
+granularity = "round"
+retriever = "bm25"
+scope = "context"
+top_k = 20
+max_context_tokens = 12000
+
+[answer_model]
+backend = "ollama"
+model = "CHANGE_ME_answer_model"   # pick from `ollama list`; keep it fixed across all methods
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 32768
+num_predict = 512
+think = false
+
+[judge]
+backend = "ollama"
+model = "CHANGE_ME_judge_model"    # validate against human labels first (docs/EXPERIMENT_PROTOCOL.md §6)
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 1024
+think = false

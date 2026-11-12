@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>論文研究進度 · HACHIMAN STUDIO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#F6E7D6">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/hachiman/hachiman-icon-32.png">
+<link rel="apple-touch-icon" href="brand/hachiman/hachiman-icon-180.png">
+<script>
+(function(){
+  var r=document.documentElement;
+  if(r.dataset.theme)return;
+  try{
+    var m=matchMedia('(prefers-color-scheme: dark)');
+    var set=function(){r.dataset.theme=m.matches?'dark':'light'};
+    set(); m.addEventListener&&m.addEventListener('change',set);
+  }catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Noto+Sans+TC:wght@400;700;900&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<link rel="stylesheet" href="brand/hachiman/tokens.css">
+<link rel="stylesheet" href="brand/hachiman/bundle.css">
+<style>
+/* 版面：單欄閱讀，八萬工作室頁首頁尾；只用 tokens.css 的變數。 */
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.hs-page{min-height:100%}
+.hs-header{padding-left:max(22px,env(safe-area-inset-left,0px));padding-right:max(22px,env(safe-area-inset-right,0px))}
+.lockup-dark{display:none!important}
+[data-theme="dark"] .lockup-light{display:none!important}
+[data-theme="dark"] .lockup-dark{display:block!important}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:var(--space-40) var(--space-64);display:grid;gap:var(--space-40)}
+.hero{display:grid;gap:var(--space-12)}
+.hero .h1{margin:0;text-wrap:balance}
+.hero .en{color:var(--ink-muted);font-size:14px}
+.toc{display:flex;flex-wrap:wrap;gap:var(--space-8)}
+.toc a{text-decoration:none}
+.toc a:hover .hs-tag{background:var(--ginger-soft);color:var(--ginger-text)}
+section{display:grid;gap:var(--space-18);scroll-margin-top:var(--space-16)}
+section>.h2{margin:0;text-wrap:balance}
+.title-sm{margin:var(--space-8) 0 0}
+p{margin:0;max-width:68ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:var(--space-18)}
+.hs-card .k{font-family:var(--font-latin);font-weight:900;font-size:13px;letter-spacing:.06em;color:var(--ginger-text)}
+.hs-card__title{font-size:19px}
+.panel{background:var(--surface-2);border-radius:var(--radius-panel);padding:var(--space-18) var(--space-22)}
+.tbl{overflow-x:auto;background:var(--surface);border-radius:var(--radius-panel)}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{padding:var(--space-10) var(--space-16);border-bottom:1.5px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;font-weight:700;color:var(--ink-muted)}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--font-latin)}
+.mono{font-family:var(--font-mono);font-size:14px}
+ul,ol{margin:0;padding-left:1.3em;display:grid;gap:var(--space-4)}
+ol.tl{list-style:none;padding:0;gap:0}
+ol.tl li{display:grid;grid-template-columns:20px 1fr;gap:var(--space-12);padding-bottom:var(--space-16)}
+ol.tl li::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--hachiman-ginger);margin-top:8px;justify-self:center}
+ol.tl .d{font-family:var(--font-latin);font-weight:700;font-size:13px;color:var(--ink-muted)}
+.sched td:first-child{white-space:nowrap;font-family:var(--font-latin);font-weight:700}
+.sched tr.meet td{background:var(--ginger-soft)}
+.sched tr.done td{color:var(--ink-muted)}
+.sched tr.done .task{text-decoration:line-through}
+.sched input{width:20px;height:20px;accent-color:var(--action)}
+.prog{max-width:420px}
+.hs-readout__value{font-size:40px}
+pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radius-panel);padding:var(--space-18) var(--space-22);margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.8;max-width:72ch}
+.hs-notice{max-width:760px}
+.hs-notice__art{width:96px}
+[data-theme="dark"] .hs-notice__art{background:var(--cream-deep);border-radius:var(--radius-tile)}
+.hs-footer{padding-left:max(22px,env(safe-area-inset-left,0px));padding-right:max(22px,env(safe-area-inset-right,0px));padding-bottom:calc(var(--space-22) + env(safe-area-inset-bottom,0px))}
+/* 文件閱讀器 */
+.reader{display:grid;gap:var(--space-18)}
+.reader-bar{display:flex;flex-wrap:wrap;gap:var(--space-10);align-items:center;justify-content:space-between}
+.doc-nav{display:flex;flex-wrap:wrap;gap:var(--space-8)}
+.doc-nav a{text-decoration:none}
+.doc-nav a[aria-current="page"] .hs-tag{background:var(--ginger-soft);color:var(--ginger-text)}
+.md{background:var(--surface);border-radius:var(--radius-card);padding:var(--space-22) clamp(16px,4vw,40px);min-width:0;overflow-wrap:anywhere}
+.md>*{max-width:76ch}
+.md h1{font:900 30px/1.25 var(--font-zh);margin:0 0 var(--space-16)}
+.md h2{font:900 23px/1.3 var(--font-zh);margin:var(--space-40) 0 var(--space-12);padding-top:var(--space-16);border-top:1.5px solid var(--line)}
+.md h3{font:900 19px/1.4 var(--font-zh);margin:var(--space-22) 0 var(--space-8)}
+.md h4{font:700 16px/1.4 var(--font-zh);margin:var(--space-18) 0 var(--space-6)}
+.md p,.md ul,.md ol{margin:0 0 var(--space-12)}
+.md ul,.md ol{display:block;padding-left:1.4em}
+.md li{margin-bottom:var(--space-4)}
+.md blockquote{margin:0 0 var(--space-12);padding:var(--space-10) var(--space-16);background:var(--surface-2);border-radius:var(--radius-tile)}
+.md pre{background:var(--surface-2);border-radius:var(--radius-tile);padding:var(--space-14);overflow-x:auto;max-width:100%}
+.md pre code{background:none;padding:0;font-size:13px}
+.md .tblwrap{overflow-x:auto;max-width:100%;margin:0 0 var(--space-16);border-radius:var(--radius-tile);background:var(--surface-2)}
+.md table{min-width:520px;font-size:14px}
+.md th{background:var(--cream-deep);color:var(--ink)}
+.md img{max-width:100%;height:auto}
+.md hr{border:none;border-top:1.5px solid var(--line);margin:var(--space-22) 0}
+.doc-src{font-size:13px;color:var(--ink-muted)}
+@media (max-width:560px){.md h1{font-size:24px}.md h2{font-size:20px}}
+@media (max-width:560px){
+  .hs-header__brand img{height:32px}
+  .h1{font-size:26px}
+  .h2{font-size:22px}
+  .hs-notice{flex-direction:column}
+  .hs-readout__value{font-size:32px}
+}
+</style>
+</head>
+<body class="hs-page">
+<header class="hs-header">
+  <a class="hs-header__brand" href="#now">
+    <img class="lockup-light" src="brand/hachiman/hachiman-lockup@2x.png" alt="HACHIMAN STUDIO 八萬工作室">
+    <img class="lockup-dark" src="brand/hachiman/hachiman-lockup-reverse@2x.png" alt="HACHIMAN STUDIO 八萬工作室">
+    <span class="hs-header__project">論文研究進度</span>
+  </a>
+  <nav class="hs-header__nav" aria-label="主要導覽">
+    <a href="#now">現況</a>
+    <a href="#schedule">每日進度</a>
+    <a href="#advisor">老師面談</a>
+    <a href="#doc-reading-list">文件</a>
+    <a href="https://github.com/duicn187532/WorldLineMem" target="_blank" rel="noopener">GitHub</a>
+    <a href="#">所有作品</a>
+  </nav>
+</header>
+
+<main class="wrap" id="home">
+<div class="hero">
+  <span class="label" style="color:var(--ink-muted)">碩士論文研究　·　更新於 2026-11-12</span>
+  <h1 class="h1">情境未標註下智能體的情境變動偵測與選擇性記憶利用</h1>
+  <div class="en">Context-Shift Detection and Selective Memory Utilization for LLM Agents under Unlabeled Interaction Contexts</div>
+  <nav class="toc" aria-label="本頁章節">
+    <a href="#problem"><span class="hs-tag">研究問題</span></a>
+    <a href="#history"><span class="hs-tag">這一個月</span></a>
+    <a href="#evidence"><span class="hs-tag">關鍵數據</span></a>
+    <a href="#decisions"><span class="hs-tag">已決定</span></a>
+    <a href="#bench"><span class="hs-tag">Benchmark</span></a>
+    <a href="#schedule"><span class="hs-tag">每日進度</span></a>
+    <a href="#advisor"><span class="hs-tag">老師面談</span></a>
+    <a href="#files"><span class="hs-tag">文件</span></a>
+  </nav>
+</div>
+
+<section id="now">
+  <h2 class="h2">現況一覽</h2>
+  <div class="cards">
+    <article class="hs-card"><span class="k">TITLE</span><h3 class="hs-card__title">題目已確認</h3><p class="hs-card__body">2026-11-12 確認維持。前提是論文要包含情境變動偵測及其評估。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
+    <article class="hs-card"><span class="k">FRAMING</span><h3 class="hs-card__title">情境依存的記憶抑制</h3><p class="hs-card__body">從遺忘出發：記憶不是被刪除，而是在不對的情境中不該被取用。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
+    <article class="hs-card"><span class="k">BENCHMARK</span><h3 class="hs-card__title">規格 v0.3、格式 v0.2</h3><p class="hs-card__body">四類場景、2–60 人、中英雙語；還沒開始生成資料。</p><span><span class="hs-tag hs-tag--warn">進行中</span></span></article>
+    <article class="hs-card"><span class="k">NEXT</span><h3 class="hs-card__title">略讀相近論文、約老師</h3><p class="hs-card__body">先略讀 27 篇相近論文並填比較表，下週面談。</p><span><span class="hs-tag hs-tag--warn">本週</span></span></article>
+  </div>
+  <div class="hs-notice" role="note">
+    <img class="hs-notice__art" src="brand/hachiman/hachiman-peek.png" alt="">
+    <div class="hs-notice__text">
+      <p class="hs-notice__title">八萬發現了最大的風險</p>
+      <p class="hs-notice__body">只看文字時，判斷「換人了沒」和「是誰」接近隨機（見<a href="#evidence">關鍵數據</a>）。如果偵測做不起來，改用備用題目《無情境標註之持續互動中智能體的選擇性記憶利用》。</p>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <h2 class="h2">研究問題</h2>
+  <p>同一個代理、同一份記憶，在連續的文字互動中服務不同的人和場景，而且沒有身分標籤、場景標籤或對話分段。「世界線」只是第一章的比喻，指「人 × 場景」構成的互動情境。</p>
+  <div class="cards">
+    <article class="hs-card"><span class="k">C1</span><h3 class="hs-card__title">情境變動偵測</h3><p class="hs-card__body">互動情境什麼時候換了。</p></article>
+    <article class="hs-card"><span class="k">C2</span><h3 class="hs-card__title">長期歸屬</h3><p class="hs-card__body">換到哪個情境：是之前出現過的人或場景，還是新的。</p></article>
+    <article class="hs-card"><span class="k">C3</span><h3 class="hs-card__title">選擇性利用</h3><p class="hs-card__body">用自己的記憶、避開別人的記憶、轉用可以遷移的記憶。</p></article>
+    <article class="hs-card"><span class="k">C4</span><h3 class="hs-card__title">不確定時先確認</h3><p class="hs-card__body">情境不明時先追問，不直接套用記憶。</p></article>
+  </div>
+  <div class="panel"><p><b>和既有研究的差異：</b>只用文字、沒有身分或場景標籤、要長期認出回來的人，並且連到記憶使用的決策。SpeakerBind、EvoSpeakerMem、VoxPolyMem 靠聲紋，Bio-Memory 靠人臉或掌紋；MixUA 和 ShareMem 的使用者身分是已知的。</p></div>
+</section>
+
+<section id="history">
+  <h2 class="h2">上次面談後的這一個月</h2>
+  <ol class="tl">
+    <li><div><div class="d">10 月中–11 月初</div>從記憶遺忘、時間有效性出發，查核 FadeMem、Pragma、STALE、Memora 等文獻，並實際跑診斷實驗。</div></li>
+    <li><div><div class="d">診斷結果</div>全域時間衰退會讓提問時取得新證據的比例大幅下降；多篇文獻在公開 benchmark 上也量不出遺忘對答題的效果。結論是遺忘研究的瓶頸在評估。</div></li>
+    <li><div><div class="d">11-10 前後</div>比較幾個可能方向後，選定「多人多場景共用記憶、沒有情境標籤」（方向 5），並決定自建 benchmark。</div></li>
+    <li><div><div class="d">11-11</div>文獻查核：對話分離、聲紋說話人記憶、記憶適用範圍。確認沒有人同時做到「只用文字、沒有標籤、長期歸屬、記憶使用決策」。</div></li>
+    <li><div><div class="d">11-12</div>確認題目；訂定 benchmark 規格與世界設定格式；定位為「情境依存的記憶抑制」；整理閱讀清單。</div></li>
+  </ol>
+</section>
+
+<section id="evidence">
+  <h2 class="h2">關鍵數據</h2>
+  <p>本 repo 自己跑的診斷。都沒有呼叫語言模型，只用 TF-IDF 或嵌入向量相似度，代表「只看文字內容」的下限。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>資料</th><th>測什麼</th><th class="num">結果</th><th class="num">隨機猜</th></tr></thead>
+    <tbody>
+      <tr><td>Memora 混合（2 人）</td><td>換人偵測 AUC／認回舊人（整段）</td><td class="num">≈0.50／58%</td><td class="num">0.50／50%</td></tr>
+      <tr><td>Memora 混合（5 人）</td><td>同上</td><td class="num">≈0.47／29%</td><td class="num">0.50／20%</td></tr>
+      <tr><td>Memora 混合（10 人）</td><td>同上</td><td class="num">≈0.46／18%</td><td class="num">0.50／10%</td></tr>
+      <tr><td>GroupMemBench（6 位作者）</td><td>作者歸屬（中心點）</td><td class="num">55.8–58.2%</td><td class="num">16.7%</td></tr>
+      <tr><td>GroupMemBench（18 位作者）</td><td>作者歸屬（中心點）</td><td class="num">55.6–57.2%</td><td class="num">5.6%</td></tr>
+      <tr><td>GroupMemBench 區塊</td><td>最近的前一個區塊是同一人／同一頻道</td><td class="num">34.5%、26.2%／98–99%</td><td class="num">—</td></tr>
+      <tr><td>STALE × FadeMem 參數</td><td>全域衰退後，提問時取得新證據的比例</td><td class="num">65.1% → 6.3%</td><td class="num">—</td></tr>
+    </tbody>
+  </table></div>
+  <p>解讀：場景（頻道）幾乎一看就分得出來，難的是「人」這一軸。Memora 的對話內容幾乎不帶個人線索，不適合當主要資料；GroupMemBench 有可用的作者訊號，適合用來開發 C1／C2。</p>
+</section>
+
+<section id="decisions">
+  <h2 class="h2">已決定事項</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>項目</th><th>決定</th></tr></thead>
+    <tbody>
+      <tr><td>題目</td><td>維持；「世界線」只當第一章的比喻</td></tr>
+      <tr><td>研究定位</td><td>情境依存的記憶抑制；FadeMem／Pragma 當作「記憶強度 ≠ 情境適用性」的對照組</td></tr>
+      <tr><td>本機模型</td><td>只是實驗的執行方式，不當作貢獻或特色</td></tr>
+      <tr><td>隱私</td><td>不在研究範圍內</td></tr>
+      <tr><td>引用</td><td>新穎性查核與相關研究要納入預印本；支撐論點的事實優先引用同儕審查文獻</td></tr>
+      <tr><td>事實會不會變</td><td>主實驗不變；「依情境過時」列為延伸</td></tr>
+      <tr><td>題目寫回記憶</td><td>不寫回</td></tr>
+      <tr><td>身分線索</td><td>中級為主，弱級當壓力測試；強級另做有名字／沒名字的對照</td></tr>
+      <tr><td>使用記憶的示範</td><td>保留，比例上限 15%，另做拿掉示範的消融</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="title-sm">還沒決定</h3>
+  <ul>
+    <li><span class="hs-tag hs-tag--warn">待實測</span>　本機生成模型：要在 Z13 上實測速度，而且要和作答模型不同家族</li>
+    <li><span class="hs-tag hs-tag--danger">不引用</span>　TSHMem：查無此文，除非拿到連結</li>
+    <li><span class="hs-tag hs-tag--warn">問老師</span>　系所對引用來源的規定、論文時程</li>
+  </ul>
+</section>
+
+<section id="bench">
+  <h2 class="h2">Benchmark 設計摘要</h2>
+  <div class="cards">
+    <article class="hs-card"><span class="k">SCENES</span><p class="hs-card__body">家庭事務、開放場域多功能工作（代理像在那裡工作的員工，有固定同事也有來往的人）、班級課程、公司多人秘書</p></article>
+    <article class="hs-card"><span class="k">DATA</span><p class="hs-card__body">GroupMemBench 改編（開發 C1／C2）＋自建（主實驗）；對話一律用本機模型生成</p></article>
+    <article class="hs-card"><span class="k">SCALE</span><p class="hs-card__body">每個案例 2–60 人；人工抽查 10 案例 × 10 題</p></article>
+    <article class="hs-card"><span class="k">LANGUAGE</span><p class="hs-card__body">英文為原始語言；中文由研究者用訂閱的閉源模型全部翻譯</p></article>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>題型</th><th>測什麼</th><th>正確行為</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Q1</td><td>自己在這個情境的記憶</td><td>使用</td></tr>
+      <tr><td class="mono">Q2</td><td>同一個人、另一個場景</td><td>只用屬於「人」的記憶</td></tr>
+      <tr><td class="mono">Q3</td><td>同一個場景、另一個人</td><td>只用屬於「場景」的記憶</td></tr>
+      <tr><td class="mono">Q4</td><td>可遷移的記憶</td><td>轉用</td></tr>
+      <tr><td class="mono">Q5</td><td>陷阱：別人有類似的記憶</td><td>避開</td></tr>
+      <tr><td class="mono">Q6</td><td>情境不明</td><td>先確認</td></tr>
+      <tr><td class="mono">Q7</td><td>自己沒有相關資料</td><td>不答或先確認</td></tr>
+    </tbody>
+  </table></div>
+  <p>實驗條件：給標籤／只給邊界／什麼都不給（主要）。指標：邊界 F1／AUC、歸屬 B³ F1、切碎與汙染、誤用／漏用／遷移、確認行為。</p>
+</section>
+
+<section id="schedule">
+  <h2 class="h2">每日進度（11/12–11/29）</h2>
+  <p>三個階段：先略讀 27 篇相近論文並填 <code>landscape_matrix.csv</code>（每篇 30–40 分鐘，11/13–11/17 每天約 3 小時）；再自己整理共同模式；面談後才精讀方法。勾選只存在你這台裝置的瀏覽器裡。</p>
+  <div class="hs-readout prog">
+    <span class="hs-readout__label">已完成</span>
+    <span class="hs-readout__value"><span id="progN">0</span><span class="hs-readout__unit"> / <span id="progT">0</span> 天</span></span>
+    <div class="hs-readout__meter"><div class="hs-readout__fill" id="progFill" style="width:0"></div></div>
+  </div>
+  <div class="tbl"><table class="sched">
+    <thead><tr><th>日期</th><th>工作</th><th>產出</th><th>完成</th></tr></thead>
+    <tbody id="sched"></tbody>
+  </table></div>
+  <div class="panel"><p>面談要帶的是你自己從比較表整理出的共同模式和概念初稿，而不是我整理的結論。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明，並說明正在做文獻比較。</p></div>
+</section>
+
+<section id="advisor">
+  <h2 class="h2">老師面談</h2>
+  <h3 class="title-sm">建議時程</h3>
+  <ul>
+    <li><b>11/12（今天）或 11/13：</b>寄信約時間，提議 11/19（四）或 11/20（五）</li>
+    <li><b>11/18：</b>寫好共同模式與概念初稿，當作報告材料</li>
+    <li><b>面談後隔天：</b>把老師的意見記進 repo，調整後續計畫</li>
+  </ul>
+  <h3 class="title-sm">報告順序（約 10 分鐘）</h3>
+  <ol>
+    <li>為什麼從遺忘轉到現在的方向：診斷數據與文獻顯示，遺忘的效果在現有 benchmark 上量不出來</li>
+    <li>新題目與 C1–C4；現在的題目仍是遺忘：依情境抑制記憶</li>
+    <li>相近研究的比較：大家共同的假設、卡住的地方，以及我從中看到的缺口與概念初稿</li>
+    <li>可行性證據與最大風險：只看文字時歸屬很難；備用題目</li>
+    <li>自建 benchmark 的設計與規模</li>
+    <li>接下來兩個月的計畫</li>
+  </ol>
+  <h3 class="title-sm">要請老師決定或給意見的事</h3>
+  <ul>
+    <li>新方向和題目是否可以接受</li>
+    <li>自建 benchmark 當作論文貢獻之一，是否可以接受</li>
+    <li>預印本可以引用到什麼程度；系所有沒有同儕審查文獻的比例規定</li>
+    <li>如果偵測（C1）效果不好，改用備用題目是否可以接受</li>
+    <li>計畫口試的時間點，以及中間的檢查點</li>
+    <li>人工抽查（約 100 題）能不能請實驗室同學協助</li>
+  </ul>
+  <h3 class="title-sm">約時間的信（草稿，可直接改）</h3>
+  <pre class="mail" id="mail">老師您好：
+
+距離上次和您討論已經一個月，這段期間研究方向有比較大的調整，想跟您約時間報告並請教意見。
+
+簡要進展：
+1. 原本的記憶遺忘方向，我實際跑了診斷，也查核了相關文獻，發現遺忘機制在現有 benchmark 上幾乎量不出對答題的影響，評估本身是瓶頸。
+2. 因此把題目調整為《情境未標註下智能體的情境變動偵測與選擇性記憶利用》：同一個智能體在沒有身分或場景標籤的連續互動中服務多人、多場景，需要判斷情境是否改變，並依情境決定哪些記憶該用、哪些該抑制。這延續了原本遺忘的問題，只是改成「依情境抑制」，而不是「隨時間衰退」。
+3. 已完成文獻查核、可行性診斷，以及自建 benchmark 的規格草案。
+
+想請教的事主要有：新方向與題目是否合適、自建 benchmark 是否可作為貢獻之一，以及引用預印本的原則。
+
+不知道老師下週（11/19 或 11/20）是否方便？若這兩天不行，也請老師告訴我方便的時段，我配合調整。報告約 10 分鐘，討論視老師時間而定。
+
+謝謝老師。
+
+學生 敬上</pre>
+  <button type="button" class="hs-btn hs-btn--primary" id="copyMail" style="justify-self:start">複製信件內容 →</button>
+</section>
+
+<section id="files">
+  <h2 class="h2">文件位置</h2>
+  <p>點文件名稱就能在這個網頁裡閱讀；右邊的 GitHub 連結是原始檔。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>文件</th><th>內容</th></tr></thead>
+    <tbody id="files-body"></tbody>
+  </table></div>
+</section>
+</main>
+
+<main class="wrap reader" id="reader" hidden>
+  <div class="reader-bar">
+    <a class="hs-btn hs-btn--secondary hs-btn--sm" href="#files">← 回到總覽</a>
+    <span class="doc-src" id="docSrc"></span>
+  </div>
+  <nav class="doc-nav" id="docNav" aria-label="文件"></nav>
+  <article class="md" id="docBody" aria-live="polite"><p>載入中…</p></article>
+</main>
+
+<footer class="hs-footer">
+  <div class="hs-footer__brand">
+    <span class="hs-footer__name">HACHIMAN STUDIO 八萬工作室</span>
+    <span class="hs-footer__tagline">靈感敏捷，作品有溫度。</span>
+  </div>
+  <nav class="hs-footer__links" aria-label="工作室連結">
+    <a href="#">所有作品</a>
+    <a href="https://github.com/duicn187532/WorldLineMem" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+</footer>
+
+<script>
+(function(){
+  var base="https://github.com/duicn187532/WorldLineMem/blob/main/";
+  var files=[
+    ["docs/READING_LIST.md","閱讀清單（三階段：略讀相近論文、整理模式、精讀方法）"],
+    ["docs/landscape_matrix.csv","相近論文比較表（27 篇，分析欄位由你填）"],
+    ["docs/LANDSCAPE_NOTES.md","共同模式與概念初稿（你寫，面談材料）"],
+    ["docs/RESEARCH_SCOPE.md","研究範圍與所有文獻查核紀錄（§13–§17 為新方向）"],
+    ["docs/BENCHMARK_SPEC.md","Benchmark 規格 v0.3 與已決定事項"],
+    ["docs/WORLD_SCHEMA.md","世界設定資料格式 v0.2"],
+    ["docs/SCHEDULE.md","閱讀與面談進度（本頁進度表的留存版）"],
+    ["docs/MIXED_MEMORY_PROTOCOL.md","多人混合記憶的評估協定與可行性結果"],
+    ["docs/DIAGNOSTICS.md","STALE／FadeMem 等診斷結果"],
+    ["docs/DECISION_GATES.md","舊方向的判斷門檻（已停用，留作紀錄）"],
+    ["docs/BENCHMARK_MATRIX.md","官方 benchmark 版本與欄位對照（舊方向）"],
+    ["docs/EXPERIMENT_PROTOCOL.md","實驗協定"],
+    ["docs/ENVIRONMENT.md","執行環境"],
+    ["docs/VALIDATION_REPORT.md","驗證報告：已完成、已測通、未完成的項目"]
+  ];
+  function slug(name){return "doc-"+name.replace(/\.(md|csv)$/i,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+  var bySlug={}; files.forEach(function(f){var n=f[0].replace("docs/","");bySlug[slug(n)]={name:n,desc:f[1],path:f[0]}});
+  var fb=document.getElementById("files-body");
+  files.forEach(function(f){
+    var tr=document.createElement("tr");
+    var name=f[0].replace("docs/","");
+    tr.innerHTML='<td class="mono"><a href="#'+slug(name)+'">'+name+'</a></td><td>'+f[1]+' <a class="doc-src" target="_blank" rel="noopener" href="'+base+f[0]+'">GitHub</a></td>';
+    fb.appendChild(tr);
+  });
+
+
+  /* 文件閱讀器：以 #doc-xxx 切換 */
+  var home=document.getElementById("home"), reader=document.getElementById("reader");
+  var docBody=document.getElementById("docBody"), docSrc=document.getElementById("docSrc"), docNav=document.getElementById("docNav");
+  files.forEach(function(f){
+    var n=f[0].replace("docs/",""), a=document.createElement("a");
+    a.href="#"+slug(n); a.dataset.slug=slug(n); a.innerHTML='<span class="hs-tag">'+n.replace(/\.(md|csv)$/,"")+'</span>';
+    docNav.appendChild(a);
+  });
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function parseCSV(text){
+    text=text.replace(/^\ufeff/,""); var rows=[],row=[],cell="",q=false;
+    for(var i=0;i<text.length;i++){var c=text[i];
+      if(q){ if(c=='"'){ if(text[i+1]=='"'){cell+='"';i++;} else q=false; } else cell+=c; }
+      else if(c=='"') q=true; else if(c==','){row.push(cell);cell="";}
+      else if(c=='\n'){row.push(cell);rows.push(row);row=[];cell="";} else if(c!='\r') cell+=c;}
+    if(cell||row.length){row.push(cell);rows.push(row);} return rows;
+  }
+  function renderCSV(text){
+    var r=parseCSV(text); if(!r.length) return "<p>（空白）</p>";
+    var h='<p>比較表的分析欄位要在試算表裡填；這裡只供瀏覽。</p><div class="tblwrap"><table><thead><tr>'+r[0].map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+'</tr></thead><tbody>';
+    var ai=r[0].indexOf("arXiv"), ni=r[0].indexOf("簡稱"), ti=r[0].indexOf("標題");
+    r.slice(1).forEach(function(row){h+="<tr>"+row.map(function(c,ci){ if((ci===ni||ci===ti)&&ai>=0&&row[ai]) return '<td><a href="https://arxiv.org/abs/'+esc(row[ai])+'" target="_blank" rel="noopener">'+esc(c)+'</a></td>';return /^https?:\/\//.test(c)?'<td><a href="'+esc(c)+'" target="_blank" rel="noopener">'+esc(c)+'</a></td>':"<td>"+esc(c)+"</td>"}).join("")+"</tr>"});
+    return h+"</tbody></table></div>";
+  }
+  function linkArxiv(root){
+    var re=/(arXiv:)?(\b\d{4}\.\d{4,5})(v\d+)?\b/g, walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), nodes=[];
+    while(walker.nextNode()){var n=walker.currentNode; if(n.parentNode.closest("a,code,pre")) continue; re.lastIndex=0; if(re.test(n.nodeValue)) nodes.push(n);}
+    nodes.forEach(function(n){
+      var frag=document.createDocumentFragment(), t=n.nodeValue, last=0, m; re.lastIndex=0;
+      while((m=re.exec(t))){
+        frag.appendChild(document.createTextNode(t.slice(last,m.index)));
+        var a=document.createElement("a"); a.href="https://arxiv.org/abs/"+m[2]; a.target="_blank"; a.rel="noopener"; a.textContent=m[0];
+        frag.appendChild(a); last=re.lastIndex;
+      }
+      frag.appendChild(document.createTextNode(t.slice(last))); n.parentNode.replaceChild(frag,n);
+    });
+  }
+  function fixLinks(root){
+    linkArxiv(root);
+    root.querySelectorAll("table").forEach(function(t){var w=document.createElement("div");w.className="tblwrap";t.parentNode.insertBefore(w,t);w.appendChild(t)});
+    root.querySelectorAll("a[href]").forEach(function(a){
+      var h=a.getAttribute("href"); var m=h.match(/^(?:\.\/)?(?:docs\/)?([A-Za-z0-9_]+\.(?:md|csv))(#.*)?$/);
+      if(m && bySlug[slug(m[1])]) a.setAttribute("href","#"+slug(m[1]));
+      else if(/^https?:/.test(h)){a.target="_blank";a.rel="noopener"}
+      else if(!/^#/.test(h)){a.href="https://github.com/duicn187532/WorldLineMem/blob/main/docs/"+h.replace(/^\.\//,"");a.target="_blank";a.rel="noopener"}
+    });
+  }
+  var cache={};
+  function show(){
+    var h=(location.hash||"").slice(1), d=bySlug[h];
+    if(!d){ var was=!reader.hidden; reader.hidden=true; home.hidden=false; if(was){var el=h&&document.getElementById(h); if(el) el.scrollIntoView(); else window.scrollTo(0,0);} return; }
+    home.hidden=true; reader.hidden=false; window.scrollTo(0,0);
+    docNav.querySelectorAll("a").forEach(function(a){ if(a.dataset.slug===h) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+    docSrc.innerHTML=esc(d.desc)+'　<a target="_blank" rel="noopener" href="'+base+d.path+'">在 GitHub 開啟</a>';
+    document.title=d.name+" · 論文研究進度 · HACHIMAN STUDIO";
+    function put(text){
+      docBody.innerHTML = /\.csv$/.test(d.name) ? renderCSV(text) : (window.marked ? marked.parse(text) : "<pre>"+esc(text)+"</pre>");
+      fixLinks(docBody);
+    }
+    if(cache[d.name]){put(cache[d.name]);return;}
+    docBody.innerHTML="<p>載入中…</p>";
+    fetch(encodeURI(d.name)).then(function(r){if(!r.ok) throw new Error(r.status); return r.text()})
+      .then(function(t){cache[d.name]=t; if(bySlug[(location.hash||"").slice(1)]===d) put(t)})
+      .catch(function(){docBody.innerHTML='<p>讀不到這份文件，請改用 <a target="_blank" rel="noopener" href="'+base+d.path+'">GitHub 原始檔</a>。</p>'});
+  }
+  var homeTitle=document.title;
+  window.addEventListener("hashchange",function(){ if(!bySlug[(location.hash||"").slice(1)]) document.title=homeTitle; show(); });
+  show();
+  var rows=[
+    ["11/12 四","寄信約老師面談（草稿見下方）；打開比較表看一下欄位","信件寄出",0],
+    ["11/13 五","第一階段略讀：A 組 P01–P05（MixUA、ShareMem、Collaborative Memory、AIM、GateMem）","比較表 5 列",0],
+    ["11/14 六","A 組 P06–P08（GroupMemBench、EverMemBench、SpeakerMem-R1）＋ B 組 P09–P10（SpeakerBind、EvoSpeakerMem）","比較表 5 列",0],
+    ["11/15 日","B 組 P11–P12（VoxPolyMem、Bio-Memory）＋ C 組 P13–P16（Memory Trap、PairPref、OP-Bench、PersistBench）","比較表 6 列",0],
+    ["11/16 一","C 組 P17–P18（Scope Before You Persist、What to Admit）＋ D 組 P19–P21（SCALE-QA、ES-Mem、HingeMem）","比較表 5 列",0],
+    ["11/17 二","D 組 P22–P23（EM-LLM、SeCom）＋ E 組 P24–P25（TANGLE、REVOIR）＋ P26 DisenReason、P27 範圍回顧","比較表 6 列",0],
+    ["11/18 三","第二階段：在 LANDSCAPE_NOTES.md 寫共同模式與概念初稿","面談材料",0],
+    ["11/19 四","老師面談（目標日）","面談紀錄",1],
+    ["11/20 五","面談備選日；沒約到就把比較表補完","—",1],
+    ["11/21 六","整理老師意見，更新題目與計畫","更新 repo 文件",0],
+    ["11/22 日","第三階段：依自己的概念，挑 2–3 篇方法章節精讀","精讀筆記",0],
+    ["11/23 一","精讀（續）","精讀筆記",0],
+    ["11/24 二","方法背景：依需要讀變點偵測或中國餐館過程","背景筆記",0],
+    ["11/25 三","方法背景（續）；評估方式（SCALE-QA、PairPref 的評估章節）","評估方式",0],
+    ["11/26 四","把概念寫成元件與資料流（和我討論）","方法草圖",0],
+    ["11/27 五","方法草案 v0","方法草案",0],
+    ["11/28 六","緩衝：補讀落後的部分","—",0],
+    ["11/29 日","回顧，挑出第一個要實作的元件","下週開始實作",0]
+  ];
+  var KEY="thesis-sched-v3", done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
+  var tb=document.getElementById("sched");
+  document.getElementById("progT").textContent=rows.length;
+  function upd(){
+    var n=0; rows.forEach(function(r,i){if(done[i])n++});
+    document.getElementById("progN").textContent=n;
+    document.getElementById("progFill").style.width=(n/rows.length*100)+"%";
+  }
+  rows.forEach(function(r,i){
+    var tr=document.createElement("tr");
+    if(r[3])tr.className="meet";
+    if(done[i])tr.classList.add("done");
+    tr.innerHTML='<td>'+r[0]+'</td><td class="task">'+r[1]+'</td><td>'+r[2]+'</td><td><input type="checkbox" id="d'+i+'" aria-label="完成：'+r[0]+'"'+(done[i]?" checked":"")+'></td>';
+    tb.appendChild(tr);
+    tr.querySelector("input").addEventListener("change",function(ev){
+      done[i]=ev.target.checked; tr.classList.toggle("done",ev.target.checked);
+      try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}
+      upd();
+    });
+  });
+  upd();
+
+  var btn=document.getElementById("copyMail");
+  btn.addEventListener("click",function(){
+    var t=document.getElementById("mail").textContent;
+    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById("mail"));var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="已選取，請按複製";}
+    try{navigator.clipboard.writeText(t).then(function(){btn.textContent="已複製"},sel)}catch(e){sel()}
+  });
+})();
+</script>
+</body>
+</html>

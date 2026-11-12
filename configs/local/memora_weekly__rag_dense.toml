@@ -1,0 +1,44 @@
+# Local Adaptation template: memora_weekly x rag_dense. weekly ~150 sessions; monthly/quarterly exceed any local context.
+# Fill every CHANGE_ME value, then: wlmem run <this file>; wlmem evaluate <this file>
+[run]
+name = "memora_weekly__rag_dense__CHANGE_ME_answer_model"
+label = "local_adaptation"
+seed = 42
+
+[benchmark]
+name = "memora"
+periods = ["weekly"]
+
+[memory]
+method = "rag"
+granularity = "round"
+retriever = "dense"
+top_k = 20
+max_context_tokens = 12000
+query_instruction = "Instruct: Given a question, retrieve chat history passages that help answer it\nQuery: "
+
+[embedding]
+backend = "ollama"
+model = "CHANGE_ME_embedding_model"   # e.g. a Qwen3 Embedding tag from `ollama list`
+base_url = "http://127.0.0.1:11434"
+num_ctx = 8192
+
+[answer_model]
+backend = "ollama"
+model = "CHANGE_ME_answer_model"   # pick from `ollama list`; keep it fixed across all methods
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 32768
+num_predict = 512
+think = false
+
+[judge]
+backend = "ollama"
+model = "CHANGE_ME_judge_model"    # validate against human labels first (docs/EXPERIMENT_PROTOCOL.md §6)
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 1024
+think = false

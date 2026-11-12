@@ -1,0 +1,33 @@
+# Local Adaptation template: stale x full_context. ~150K-token haystacks: full_context needs a model with >=192K native context (measured 146K-161K cl100k tokens).
+# Fill every CHANGE_ME value, then: wlmem run <this file>; wlmem evaluate <this file>
+[run]
+name = "stale__full_context__CHANGE_ME_answer_model"
+label = "local_adaptation"
+seed = 42
+
+[benchmark]
+name = "stale"
+
+[memory]
+method = "full_context"
+max_context_tokens = 180000
+
+[answer_model]
+backend = "ollama"
+model = "CHANGE_ME_answer_model"   # pick from `ollama list`; keep it fixed across all methods
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 196608
+num_predict = 512
+think = false
+
+[judge]
+backend = "ollama"
+model = "CHANGE_ME_judge_model"    # validate against human labels first (docs/EXPERIMENT_PROTOCOL.md §6)
+base_url = "http://127.0.0.1:11434"
+temperature = 0.0
+seed = 42
+num_ctx = 16384
+num_predict = 1024
+think = false
