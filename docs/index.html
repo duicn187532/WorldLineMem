@@ -388,10 +388,25 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
   function renderCSV(text){
     var r=parseCSV(text); if(!r.length) return "<p>（空白）</p>";
     var h='<p>比較表的分析欄位要在試算表裡填；這裡只供瀏覽。</p><div class="tblwrap"><table><thead><tr>'+r[0].map(function(c){return "<th>"+esc(c)+"</th>"}).join("")+'</tr></thead><tbody>';
-    r.slice(1).forEach(function(row){h+="<tr>"+row.map(function(c){return /^https?:\/\//.test(c)?'<td><a href="'+esc(c)+'" target="_blank" rel="noopener">'+esc(c)+'</a></td>':"<td>"+esc(c)+"</td>"}).join("")+"</tr>"});
+    var ai=r[0].indexOf("arXiv"), ni=r[0].indexOf("簡稱"), ti=r[0].indexOf("標題");
+    r.slice(1).forEach(function(row){h+="<tr>"+row.map(function(c,ci){ if((ci===ni||ci===ti)&&ai>=0&&row[ai]) return '<td><a href="https://arxiv.org/abs/'+esc(row[ai])+'" target="_blank" rel="noopener">'+esc(c)+'</a></td>';return /^https?:\/\//.test(c)?'<td><a href="'+esc(c)+'" target="_blank" rel="noopener">'+esc(c)+'</a></td>':"<td>"+esc(c)+"</td>"}).join("")+"</tr>"});
     return h+"</tbody></table></div>";
   }
+  function linkArxiv(root){
+    var re=/(arXiv:)?(\b\d{4}\.\d{4,5})(v\d+)?\b/g, walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null), nodes=[];
+    while(walker.nextNode()){var n=walker.currentNode; if(n.parentNode.closest("a,code,pre")) continue; re.lastIndex=0; if(re.test(n.nodeValue)) nodes.push(n);}
+    nodes.forEach(function(n){
+      var frag=document.createDocumentFragment(), t=n.nodeValue, last=0, m; re.lastIndex=0;
+      while((m=re.exec(t))){
+        frag.appendChild(document.createTextNode(t.slice(last,m.index)));
+        var a=document.createElement("a"); a.href="https://arxiv.org/abs/"+m[2]; a.target="_blank"; a.rel="noopener"; a.textContent=m[0];
+        frag.appendChild(a); last=re.lastIndex;
+      }
+      frag.appendChild(document.createTextNode(t.slice(last))); n.parentNode.replaceChild(frag,n);
+    });
+  }
   function fixLinks(root){
+    linkArxiv(root);
     root.querySelectorAll("table").forEach(function(t){var w=document.createElement("div");w.className="tblwrap";t.parentNode.insertBefore(w,t);w.appendChild(t)});
     root.querySelectorAll("a[href]").forEach(function(a){
       var h=a.getAttribute("href"); var m=h.match(/^(?:\.\/)?(?:docs\/)?([A-Za-z0-9_]+\.(?:md|csv))(#.*)?$/);

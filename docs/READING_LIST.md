@@ -21,13 +21,13 @@
 
 | 組別 | 相近在哪 | 論文（編號對應比較表） |
 |---|---|---|
-| A 多人共用記憶 | 同一個代理服務多人 | P01 MixUA、P02 ShareMem、P03 Collaborative Memory、P04 AIM、P05 GateMem、P06 GroupMemBench、P07 EverMemBench、P08 SpeakerMem-R1 |
-| B 有身分訊號的多人記憶 | 問題結構和你最接近，只是靠聲紋或人臉 | P09 SpeakerBind、P10 EvoSpeakerMem、P11 VoxPolyMem、P12 Bio-Memory |
-| C 記憶被用錯地方 | 記憶有效但不適用 | P13 The Memory Trap、P14 PairPref、P15 OP-Bench、P16 PersistBench、P17 Scope Before You Persist、P18 What to Admit |
-| D 沒有邊界的切分 | 連續對話裡判斷段落 | P19 SCALE-QA／TSIM、P20 ES-Mem、P21 HingeMem、P22 EM-LLM、P23 SeCom |
-| E 情境不明時的處理 | 該問還是該答 | P24 TANGLE、P25 REVOIR |
-| F 其他領域的同類問題 | 混合序列、人數未知 | P26 DisenReason（共用帳號推薦） |
-| G 研究動機 | 現實中的共用情況 | P27 單人助理涉及他人的範圍回顧 |
+| A 多人共用記憶 | 同一個代理服務多人 | P01 [MixUA](https://arxiv.org/abs/2611.10439)、P02 [ShareMem](https://arxiv.org/abs/2609.32511)、P03 [Collaborative Memory](https://arxiv.org/abs/2505.18279)、P04 [AIM](https://arxiv.org/abs/2609.12320)、P05 [GateMem](https://arxiv.org/abs/2606.18829)、P06 [GroupMemBench](https://arxiv.org/abs/2605.14498)、P07 [EverMemBench](https://arxiv.org/abs/2602.01313)、P08 [SpeakerMem-R1](https://arxiv.org/abs/2609.26780) |
+| B 有身分訊號的多人記憶 | 問題結構和你最接近，只是靠聲紋或人臉 | P09 [SpeakerBind](https://arxiv.org/abs/2609.38501)、P10 [EvoSpeakerMem](https://arxiv.org/abs/2610.36713)、P11 [VoxPolyMem](https://arxiv.org/abs/2609.32522)、P12 [Bio-Memory](https://arxiv.org/abs/2609.08558) |
+| C 記憶被用錯地方 | 記憶有效但不適用 | P13 [The Memory Trap](https://arxiv.org/abs/2611.07554)、P14 [PairPref](https://arxiv.org/abs/2609.34526)、P15 [OP-Bench](https://arxiv.org/abs/2601.13722)、P16 [PersistBench](https://arxiv.org/abs/2602.01146)、P17 [Scope Before You Persist](https://arxiv.org/abs/2609.29144)、P18 [What to Admit](https://arxiv.org/abs/2610.11188) |
+| D 沒有邊界的切分 | 連續對話裡判斷段落 | P19 [SCALE-QA／TSIM](https://arxiv.org/abs/2608.25655)、P20 [ES-Mem](https://arxiv.org/abs/2601.07582)、P21 [HingeMem](https://arxiv.org/abs/2604.06845)、P22 [EM-LLM](https://arxiv.org/abs/2407.09450)、P23 [SeCom](https://arxiv.org/abs/2502.05589) |
+| E 情境不明時的處理 | 該問還是該答 | P24 [TANGLE](https://arxiv.org/abs/2608.13921)、P25 [REVOIR](https://arxiv.org/abs/2609.37588) |
+| F 其他領域的同類問題 | 混合序列、人數未知 | P26 [DisenReason](https://arxiv.org/abs/2603.03782)（共用帳號推薦） |
+| G 研究動機 | 現實中的共用情況 | P27 [單人助理涉及他人的範圍回顧](https://arxiv.org/abs/2609.14062) |
 
 B 組要讀：研究問題不是「聲紋是不是訊號」，但這組的問題結構和你最接近，要拿來比較。
 
@@ -50,20 +50,20 @@ B 組要讀：研究問題不是「聲紋是不是訊號」，但這組的問題
 
 | 文獻 | 可能的用途 |
 |---|---|
-| Adams & MacKay (2007), *Bayesian Online Changepoint Detection*, arXiv:0710.3742 | 線上偵測「換了沒」的機率模型 |
-| Fox 等 (2008) 黏性 HDP-HMM（ICML）；Teh 等 (2006) 階層狄利克雷過程（JASA，讀中國餐館過程） | 情境數未知、會持續、會回來 |
-| *Consistent yet Contextual*，arXiv:2611.07111 | 同一位作者的風格隨情境改變 |
-| Kummerfeld 等 (2019) ACL；Elsner & Charniak (2008) ACL | 對話分離的資料與指標 |
-| Hearst (1997) TextTiling | 主題切分的經典對照組 |
-| Liu 等 (2008) Isolation Forest（ICDM）；Domingos & Hulten (2000) Hoeffding tree（KDD） | 新人／新場景偵測；線上決策樹 |
+| Adams & MacKay (2007), *Bayesian Online Changepoint Detection*, [arXiv:0710.3742](https://arxiv.org/abs/0710.3742) | 線上偵測「換了沒」的機率模型 |
+| Fox 等 (2008) 黏性 HDP-HMM（[ICML 2008](https://doi.org/10.1145/1390156.1390196)）；Teh 等 (2006) 階層狄利克雷過程（[JASA](https://doi.org/10.1198/016214506000000302)，讀中國餐館過程） | 情境數未知、會持續、會回來 |
+| *Consistent yet Contextual*，[arXiv:2611.07111](https://arxiv.org/abs/2611.07111) | 同一位作者的風格隨情境改變 |
+| Kummerfeld 等 (2019) [ACL](https://aclanthology.org/P19-1374/)；Elsner & Charniak (2008) [ACL](https://aclanthology.org/P08-1095/) | 對話分離的資料與指標 |
+| Hearst (1997) [TextTiling](https://aclanthology.org/J97-1003/) | 主題切分的經典對照組 |
+| Liu 等 (2008) Isolation Forest（[ICDM](https://doi.org/10.1109/ICDM.2008.17)）；Domingos & Hulten (2000) Hoeffding tree（[KDD](https://doi.org/10.1145/347090.347107)） | 新人／新場景偵測；線上決策樹 |
 
 ## 寫相關研究時再查（略讀）
 
-- **情境適用性的其他研究**：CUPID、RPEval、BenchPreS、ConMem（2610.33432）。
-- **其他事件切分記憶**：Nemori（ES-Mem 引用）、Membox（2601.03785）。
-- **聲紋記憶的其他研究**：AFA（2604.25022，只見於 VoxPolyMem 的引用，未讀原文）。
-- **世界與歸屬的比喻、場景路由**：CASK（2610.09008）、TransMem（2611.10683）、LifeMem（2609.12655）、STRATA（2610.19386）。
-- **先前方向的背景**：Memora（2604.20006）、STALE（2605.06527）、Pragma（KBS 353:117193）、MemFSM、StateAuditor（2608.01619）。
-- **時間軸記憶與保留**（說明本研究為何不走這條線）：FadeMem（2601.18642）、Zep（2501.13956）、A-MEM（2502.12110）、RoMem（2604.11544）、*Selective Forgetting*（2608.28978）、RaMem（2606.22844）、EngramRAG（2609.32049）。
-- **只看過摘要、待確認是否相關**：*Before Bringing It Up*（2610.09470）、*Learning Personalized Memory Gating*（2610.23812）、*Mitigating Over-Personalization via Structured Memory*（2608.08300）、*Clarify, Abstain or Answer?*（2605.25831）。
+- **情境適用性的其他研究**：CUPID（[2508.01674](https://arxiv.org/abs/2508.01674)）、RPEval（未查到確切出處）、BenchPreS（[2603.16557](https://arxiv.org/abs/2603.16557)）、ConMem（[2610.33432](https://arxiv.org/abs/2610.33432)）。
+- **其他事件切分記憶**：Nemori（ES-Mem 引用，未查到確切出處）、Membox（[2601.03785](https://arxiv.org/abs/2601.03785)）。
+- **聲紋記憶的其他研究**：AFA（[2604.25022](https://arxiv.org/abs/2604.25022)，只見於 VoxPolyMem 的引用，未讀原文）。
+- **世界與歸屬的比喻、場景路由**：CASK（[2610.09008](https://arxiv.org/abs/2610.09008)）、TransMem（[2611.10683](https://arxiv.org/abs/2611.10683)）、LifeMem（[2609.12655](https://arxiv.org/abs/2609.12655)）、STRATA（[2610.19386](https://arxiv.org/abs/2610.19386)）。
+- **先前方向的背景**：Memora（[2604.20006](https://arxiv.org/abs/2604.20006)）、STALE（[2605.06527](https://arxiv.org/abs/2605.06527)）、Pragma（[KBS 353:117193](https://doi.org/10.1016/j.knosys.2026.117193)）、MemFSM（[EMNLP 2026](https://aclanthology.org/2026.emnlp-main.260/)）、StateAuditor（[2608.01619](https://arxiv.org/abs/2608.01619)）。
+- **時間軸記憶與保留**（說明本研究為何不走這條線）：FadeMem（[2601.18642](https://arxiv.org/abs/2601.18642)）、Zep（[2501.13956](https://arxiv.org/abs/2501.13956)）、A-MEM（[2502.12110](https://arxiv.org/abs/2502.12110)）、RoMem（[2604.11544](https://arxiv.org/abs/2604.11544)）、*Selective Forgetting*（[2608.28978](https://arxiv.org/abs/2608.28978)）、RaMem（[2606.22844](https://arxiv.org/abs/2606.22844)）、EngramRAG（[2609.32049](https://arxiv.org/abs/2609.32049)）。
+- **只看過摘要、待確認是否相關**：*Before Bringing It Up*（[2610.09470](https://arxiv.org/abs/2610.09470)）、*Learning Personalized Memory Gating*（[2610.23812](https://arxiv.org/abs/2610.23812)）、*Mitigating Over-Personalization via Structured Memory*（[2608.08300](https://arxiv.org/abs/2608.08300)）、*Clarify, Abstain or Answer?*（[2605.25831](https://arxiv.org/abs/2605.25831)）。
 - 未能確認存在、**不得引用**：TSHMem（2026-11-12 查無此文，見 RESEARCH_SCOPE.md §16）。
