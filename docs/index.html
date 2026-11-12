@@ -120,7 +120,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
     <article class="hs-card"><span class="k">TITLE</span><h3 class="hs-card__title">題目已確認</h3><p class="hs-card__body">2026-11-12 確認維持。前提是論文要包含情境變動偵測及其評估。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
     <article class="hs-card"><span class="k">FRAMING</span><h3 class="hs-card__title">情境依存的記憶抑制</h3><p class="hs-card__body">從遺忘出發：記憶不是被刪除，而是在不對的情境中不該被取用。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
     <article class="hs-card"><span class="k">BENCHMARK</span><h3 class="hs-card__title">規格 v0.3、格式 v0.2</h3><p class="hs-card__body">四類場景、2–60 人、中英雙語；還沒開始生成資料。</p><span><span class="hs-tag hs-tag--warn">進行中</span></span></article>
-    <article class="hs-card"><span class="k">NEXT</span><h3 class="hs-card__title">讀論文、約老師</h3><p class="hs-card__body">先讀 3 篇定位論文，下週面談。</p><span><span class="hs-tag hs-tag--warn">本週</span></span></article>
+    <article class="hs-card"><span class="k">NEXT</span><h3 class="hs-card__title">讀論文、約老師</h3><p class="hs-card__body">先讀 C3、C4 兩篇方法論文，下週面談。</p><span><span class="hs-tag hs-tag--warn">本週</span></span></article>
   </div>
   <div class="hs-notice" role="note">
     <img class="hs-notice__art" src="brand/hachiman/hachiman-peek.png" alt="">
@@ -221,7 +221,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
 
 <section id="schedule">
   <h2 class="h2">每日進度（11/12–11/29）</h2>
-  <p>假設平日每天約 2–3 小時。第一級論文每篇抓一天，讀完在 <code>READING_LIST.md</code> 的「讀後」欄寫一句自己的判斷。勾選只存在你這台裝置的瀏覽器裡。</p>
+  <p>假設平日每天約 2–3 小時。第一級依題目四個部分（C1–C4）排序，讀完在 <code>READING_LIST.md</code> 的「讀後」欄寫一句：可借用什麼、缺什麼。勾選只存在你這台裝置的瀏覽器裡。</p>
   <div class="hs-readout prog">
     <span class="hs-readout__label">已完成</span>
     <span class="hs-readout__value"><span id="progN">0</span><span class="hs-readout__unit"> / <span id="progT">0</span> 天</span></span>
@@ -231,7 +231,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
     <thead><tr><th>日期</th><th>工作</th><th>產出</th><th>完成</th></tr></thead>
     <tbody id="sched"></tbody>
   </table></div>
-  <div class="panel"><p>面談要約在讀完 1、2、7 之後：這樣被問到「和 SpeakerBind、MixUA 差在哪」時，你能用自己的話回答。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明即可。</p></div>
+  <div class="panel"><p>面談前先讀 C1–C4 各自最接近的方法，帶一頁「四部分各可借用什麼、缺什麼」的草圖去討論，比只談差異點更容易得到具體建議。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明即可。</p></div>
 </section>
 
 <section id="advisor">
@@ -246,7 +246,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
   <ol>
     <li>為什麼從遺忘轉到現在的方向：診斷數據與文獻顯示，遺忘的效果在現有 benchmark 上量不出來</li>
     <li>新題目與 C1–C4；現在的題目仍是遺忘：依情境抑制記憶</li>
-    <li>和最接近的研究的差異（SpeakerBind、EvoSpeakerMem、MixUA、Bio-Memory）</li>
+    <li>四個部分各自可借用的方法與缺口（准入、VoI 提問、邊界偵測、人數未知的歸屬），以及把它們接起來的方法構想</li>
     <li>可行性證據與最大風險：只看文字時歸屬很難；備用題目</li>
     <li>自建 benchmark 的設計與規模</li>
     <li>接下來兩個月的計畫</li>
@@ -305,7 +305,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
 (function(){
   var base="https://github.com/duicn187532/WorldLineMem/blob/main/";
   var files=[
-    ["docs/READING_LIST.md","閱讀清單（三級、閱讀順序、讀後欄）"],
+    ["docs/READING_LIST.md","閱讀清單（依 C1–C4 方法排序、讀後欄）"],
     ["docs/RESEARCH_SCOPE.md","研究範圍與所有文獻查核紀錄（§13–§17 為新方向）"],
     ["docs/BENCHMARK_SPEC.md","Benchmark 規格 v0.3 與已決定事項"],
     ["docs/WORLD_SCHEMA.md","世界設定資料格式 v0.2"],
@@ -323,23 +323,23 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
 
   var rows=[
     ["11/12 四","寄信約老師面談（草稿見下方）；瀏覽本頁","信件寄出",0],
-    ["11/13 五","#1 SpeakerBind：§3.1「文字線索是捷徑」的論證、只給文字時的結果","讀後一句話：文字線索在你的設定裡為什麼是訊號",0],
-    ["11/14 六","#2 EvoSpeakerMem：切碎與汙染的取捨、first-seen binding 評估協定","確認評估協定能否直接沿用",0],
-    ["11/15 日","#7 MixUA：四種記憶範圍的定義、限制章節是否提到群組或身分不明","確認有沒有被搶先",0],
-    ["11/16 一","寫一頁差異比較（1、2、7、Bio-Memory 對照本研究）","差異比較一頁",0],
-    ["11/17 二","#3 GroupMemBench：資料生成方式、提問者藏在「我」後面的題型","決定改編方式",0],
-    ["11/18 三","準備面談材料：10 分鐘報告","投影片或一頁摘要",0],
-    ["11/19 四","老師面談（目標日）；沒約到就讀 #4","面談紀錄",1],
-    ["11/20 五","面談備選日；#4 SCALE-QA／TSIM：串流切分規則（附錄 Table 15）","切分基準的候選",1],
+    ["11/13 五","#8 What to Admit（C3 准入）：situated adjudication 的屬性欄位與固定規則","讀後：准入屬性還缺哪些情境欄位",0],
+    ["11/14 六","#12 REVOIR（C4 何時該問）：粒子信念與 VoI 公式","讀後：意圖換成「哪個情境」要改什麼",0],
+    ["11/15 日","#3 HingeMem、#2 ES-Mem（C1）：邊界原因、兩階段偵測","C1 候選做法清單",0],
+    ["11/16 一","#1 EM-LLM 驚訝度邊界；#4 BOCPD 讀到能看懂演算法","C1 訊號怎麼變成機率",0],
+    ["11/17 二","#5 DisenReason；#6 中國餐館過程（C2 人數未知）","C2 候選做法清單",0],
+    ["11/18 三","準備面談：一頁方法草圖（四部分可借用什麼、缺什麼）","投影片或一頁摘要",0],
+    ["11/19 四","老師面談（目標日）；沒約到就讀 #11","面談紀錄",1],
+    ["11/20 五","面談備選日；#9 MixUA、#10 Scope Before You Persist","範圍分類",1],
     ["11/21 六","整理老師意見，更新題目與計畫","更新 repo 文件",0],
-    ["11/22 日","#5 PairPref：成對設計、兩條評估軌","外部驗證是否可用",0],
-    ["11/23 一","#6 TANGLE：CPC 定義、CAAP 行動策略","C4「先確認」的設計依據",0],
-    ["11/24 二","#9 The Memory Trap：問題定義、寫入時與讀取時的誤用","論文問題定義草稿",0],
-    ["11/25 三","#8 ShareMem：§4.4 跨使用者偏好干擾的稽核","稽核方法可否借用",0],
-    ["11/26 四","#10 範圍回顧：§5.2.1 共用使用、§6.1 歸屬錯誤","第一章動機要點",0],
-    ["11/27 五","第二級：BOCPD、TextTiling（方法章節）","C1 候選方法清單",0],
-    ["11/28 六","第二級：黏性 HDP-HMM、中國餐館過程","C2 候選方法清單",0],
-    ["11/29 日","緩衝與回顧：補讀落後的部分，挑出 C1／C2 要先試的方法","下週開始方法設計",0]
+    ["11/22 日","#11 The Memory Trap、#13 TANGLE","問題定義與行動選項",0],
+    ["11/23 一","#14 GroupMemBench：資料生成方式與題型","決定改編方式",0],
+    ["11/24 二","#15 SCALE-QA／TSIM、#16 PairPref（評估）","評估方式",0],
+    ["11/25 三","#7 Consistent yet Contextual（同一人跨場景的表示）","C2 表示法",0],
+    ["11/26 四","略讀「待確認」四篇，決定要不要升級","更新清單",0],
+    ["11/27 五","方法草案 v0（和我討論）","方法草案",0],
+    ["11/28 六","緩衝：補讀落後的部分","—",0],
+    ["11/29 日","回顧，挑出第一個要實作的元件","下週開始實作",0]
   ];
   var KEY="thesis-sched-v1", done={};
   try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
