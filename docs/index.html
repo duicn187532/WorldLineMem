@@ -341,7 +341,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
     ["11/28 六","緩衝：補讀落後的部分","—",0],
     ["11/29 日","回顧，挑出第一個要實作的元件","下週開始實作",0]
   ];
-  var KEY="thesis-sched-v1", done={};
+  var KEY="thesis-sched-v2", done={};
   try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
   var tb=document.getElementById("sched");
   document.getElementById("progT").textContent=rows.length;
