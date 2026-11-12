@@ -59,6 +59,7 @@
 ## 第三級：寫相關研究時再查（略讀）
 
 - 多人記憶：SpeakerMem-R1（2609.26780）、EverMemBench（2602.01313）。
+- 以生物特徵或聲紋取得身分的多人記憶（說明「身分訊號可得」時已有做法，本研究處理訊號不可得的情況）：*Personalizing LLM Agent Memory Using Biometrics*／Bio-Memory（2609.08558，人臉與掌紋）、VoxPolyMem（2609.32522，線上聲紋追蹤）、AFA（2604.25022，聲紋；只見於 VoxPolyMem 的引用，未讀原文）。
 - 情境適用性與過度個人化：OP-Bench（2601.13722）、CUPID、RPEval、BenchPreS、ConMem（2610.33432）。
 - 跨使用者共享：Collaborative Memory（2505.18279）、AIM（2609.12320）、GateMem（2606.18829）。
 - 先前方向的背景（第二章相關研究需要）：Memora（2604.20006）、STALE（2605.06527）、Pragma（KBS 353:117193）、MemFSM、StateAuditor（2608.01619）。
