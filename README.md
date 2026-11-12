@@ -1,6 +1,12 @@
+<p align="center"><img src="docs/brand/hachiman/hachiman-lockup@2x.png" alt="HACHIMAN STUDIO 八萬工作室" height="64"></p>
+
 # WorldLineMem：長期記憶實驗環境
 
-碩士論文《無狀態持續型智能體在世界線變動偵測後之選擇性記憶調整》的實驗基礎設施。
+碩士論文《情境未標註下智能體的情境變動偵測與選擇性記憶利用》的研究文件與實驗環境；進度總覽網頁見 `docs/index.html`（GitHub Pages）。
+
+<sub>HACHIMAN STUDIO · 八萬工作室作品</sub>
+
+> 題目於 2026-11-12 更新；原題《無狀態持續型智能體在世界線變動偵測後之選擇性記憶調整》。
 
 本階段**只**準備：官方 benchmark（固定版本）、統一的 runner、不需外部服務的 baseline，以及可重現的紀錄。研究方法本身尚未實作。
 
