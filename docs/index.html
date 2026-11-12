@@ -120,7 +120,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
     <article class="hs-card"><span class="k">TITLE</span><h3 class="hs-card__title">題目已確認</h3><p class="hs-card__body">2026-11-12 確認維持。前提是論文要包含情境變動偵測及其評估。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
     <article class="hs-card"><span class="k">FRAMING</span><h3 class="hs-card__title">情境依存的記憶抑制</h3><p class="hs-card__body">從遺忘出發：記憶不是被刪除，而是在不對的情境中不該被取用。</p><span><span class="hs-tag hs-tag--done">已確認</span></span></article>
     <article class="hs-card"><span class="k">BENCHMARK</span><h3 class="hs-card__title">規格 v0.3、格式 v0.2</h3><p class="hs-card__body">四類場景、2–60 人、中英雙語；還沒開始生成資料。</p><span><span class="hs-tag hs-tag--warn">進行中</span></span></article>
-    <article class="hs-card"><span class="k">NEXT</span><h3 class="hs-card__title">讀論文、約老師</h3><p class="hs-card__body">先讀 C3、C4 兩篇方法論文，下週面談。</p><span><span class="hs-tag hs-tag--warn">本週</span></span></article>
+    <article class="hs-card"><span class="k">NEXT</span><h3 class="hs-card__title">略讀相近論文、約老師</h3><p class="hs-card__body">先略讀 27 篇相近論文並填比較表，下週面談。</p><span><span class="hs-tag hs-tag--warn">本週</span></span></article>
   </div>
   <div class="hs-notice" role="note">
     <img class="hs-notice__art" src="brand/hachiman/hachiman-peek.png" alt="">
@@ -221,7 +221,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
 
 <section id="schedule">
   <h2 class="h2">每日進度（11/12–11/29）</h2>
-  <p>假設平日每天約 2–3 小時。第一級依題目四個部分（C1–C4）排序，讀完在 <code>READING_LIST.md</code> 的「讀後」欄寫一句：可借用什麼、缺什麼。勾選只存在你這台裝置的瀏覽器裡。</p>
+  <p>三個階段：先略讀 27 篇相近論文並填 <code>landscape_matrix.csv</code>（每篇 30–40 分鐘，11/13–11/17 每天約 3 小時）；再自己整理共同模式；面談後才精讀方法。勾選只存在你這台裝置的瀏覽器裡。</p>
   <div class="hs-readout prog">
     <span class="hs-readout__label">已完成</span>
     <span class="hs-readout__value"><span id="progN">0</span><span class="hs-readout__unit"> / <span id="progT">0</span> 天</span></span>
@@ -231,7 +231,7 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
     <thead><tr><th>日期</th><th>工作</th><th>產出</th><th>完成</th></tr></thead>
     <tbody id="sched"></tbody>
   </table></div>
-  <div class="panel"><p>面談前先讀 C1–C4 各自最接近的方法，帶一頁「四部分各可借用什麼、缺什麼」的草圖去討論，比只談差異點更容易得到具體建議。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明即可。</p></div>
+  <div class="panel"><p>面談要帶的是你自己從比較表整理出的共同模式和概念初稿，而不是我整理的結論。如果老師只有本週有空，就先去，用本頁的「關鍵數據」和「研究問題」說明，並說明正在做文獻比較。</p></div>
 </section>
 
 <section id="advisor">
@@ -239,14 +239,14 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
   <h3 class="title-sm">建議時程</h3>
   <ul>
     <li><b>11/12（今天）或 11/13：</b>寄信約時間，提議 11/19（四）或 11/20（五）</li>
-    <li><b>11/18：</b>準備 10 分鐘的報告材料</li>
+    <li><b>11/18：</b>寫好共同模式與概念初稿，當作報告材料</li>
     <li><b>面談後隔天：</b>把老師的意見記進 repo，調整後續計畫</li>
   </ul>
   <h3 class="title-sm">報告順序（約 10 分鐘）</h3>
   <ol>
     <li>為什麼從遺忘轉到現在的方向：診斷數據與文獻顯示，遺忘的效果在現有 benchmark 上量不出來</li>
     <li>新題目與 C1–C4；現在的題目仍是遺忘：依情境抑制記憶</li>
-    <li>四個部分各自可借用的方法與缺口（准入、VoI 提問、邊界偵測、人數未知的歸屬），以及把它們接起來的方法構想</li>
+    <li>相近研究的比較：大家共同的假設、卡住的地方，以及我從中看到的缺口與概念初稿</li>
     <li>可行性證據與最大風險：只看文字時歸屬很難；備用題目</li>
     <li>自建 benchmark 的設計與規模</li>
     <li>接下來兩個月的計畫</li>
@@ -305,7 +305,9 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
 (function(){
   var base="https://github.com/duicn187532/WorldLineMem/blob/main/";
   var files=[
-    ["docs/READING_LIST.md","閱讀清單（依 C1–C4 方法排序、讀後欄）"],
+    ["docs/READING_LIST.md","閱讀清單（三階段：略讀相近論文、整理模式、精讀方法）"],
+    ["docs/landscape_matrix.csv","相近論文比較表（27 篇，分析欄位由你填）"],
+    ["docs/LANDSCAPE_NOTES.md","共同模式與概念初稿（你寫，面談材料）"],
     ["docs/RESEARCH_SCOPE.md","研究範圍與所有文獻查核紀錄（§13–§17 為新方向）"],
     ["docs/BENCHMARK_SPEC.md","Benchmark 規格 v0.3 與已決定事項"],
     ["docs/WORLD_SCHEMA.md","世界設定資料格式 v0.2"],
@@ -322,26 +324,26 @@ pre.mail{white-space:pre-wrap;background:var(--surface);border-radius:var(--radi
   });
 
   var rows=[
-    ["11/12 四","寄信約老師面談（草稿見下方）；瀏覽本頁","信件寄出",0],
-    ["11/13 五","#8 What to Admit（C3 准入）：situated adjudication 的屬性欄位與固定規則","讀後：准入屬性還缺哪些情境欄位",0],
-    ["11/14 六","#12 REVOIR（C4 何時該問）：粒子信念與 VoI 公式","讀後：意圖換成「哪個情境」要改什麼",0],
-    ["11/15 日","#3 HingeMem、#2 ES-Mem（C1）：邊界原因、兩階段偵測","C1 候選做法清單",0],
-    ["11/16 一","#1 EM-LLM 驚訝度邊界；#4 BOCPD 讀到能看懂演算法","C1 訊號怎麼變成機率",0],
-    ["11/17 二","#5 DisenReason；#6 中國餐館過程（C2 人數未知）","C2 候選做法清單",0],
-    ["11/18 三","準備面談：一頁方法草圖（四部分可借用什麼、缺什麼）","投影片或一頁摘要",0],
-    ["11/19 四","老師面談（目標日）；沒約到就讀 #11","面談紀錄",1],
-    ["11/20 五","面談備選日；#9 MixUA、#10 Scope Before You Persist","範圍分類",1],
+    ["11/12 四","寄信約老師面談（草稿見下方）；打開比較表看一下欄位","信件寄出",0],
+    ["11/13 五","第一階段略讀：A 組 P01–P05（MixUA、ShareMem、Collaborative Memory、AIM、GateMem）","比較表 5 列",0],
+    ["11/14 六","A 組 P06–P08（GroupMemBench、EverMemBench、SpeakerMem-R1）＋ B 組 P09–P10（SpeakerBind、EvoSpeakerMem）","比較表 5 列",0],
+    ["11/15 日","B 組 P11–P12（VoxPolyMem、Bio-Memory）＋ C 組 P13–P16（Memory Trap、PairPref、OP-Bench、PersistBench）","比較表 6 列",0],
+    ["11/16 一","C 組 P17–P18（Scope Before You Persist、What to Admit）＋ D 組 P19–P21（SCALE-QA、ES-Mem、HingeMem）","比較表 5 列",0],
+    ["11/17 二","D 組 P22–P23（EM-LLM、SeCom）＋ E 組 P24–P25（TANGLE、REVOIR）＋ P26 DisenReason、P27 範圍回顧","比較表 6 列",0],
+    ["11/18 三","第二階段：在 LANDSCAPE_NOTES.md 寫共同模式與概念初稿","面談材料",0],
+    ["11/19 四","老師面談（目標日）","面談紀錄",1],
+    ["11/20 五","面談備選日；沒約到就把比較表補完","—",1],
     ["11/21 六","整理老師意見，更新題目與計畫","更新 repo 文件",0],
-    ["11/22 日","#11 The Memory Trap、#13 TANGLE","問題定義與行動選項",0],
-    ["11/23 一","#14 GroupMemBench：資料生成方式與題型","決定改編方式",0],
-    ["11/24 二","#15 SCALE-QA／TSIM、#16 PairPref（評估）","評估方式",0],
-    ["11/25 三","#7 Consistent yet Contextual（同一人跨場景的表示）","C2 表示法",0],
-    ["11/26 四","略讀「待確認」四篇，決定要不要升級","更新清單",0],
-    ["11/27 五","方法草案 v0（和我討論）","方法草案",0],
+    ["11/22 日","第三階段：依自己的概念，挑 2–3 篇方法章節精讀","精讀筆記",0],
+    ["11/23 一","精讀（續）","精讀筆記",0],
+    ["11/24 二","方法背景：依需要讀變點偵測或中國餐館過程","背景筆記",0],
+    ["11/25 三","方法背景（續）；評估方式（SCALE-QA、PairPref 的評估章節）","評估方式",0],
+    ["11/26 四","把概念寫成元件與資料流（和我討論）","方法草圖",0],
+    ["11/27 五","方法草案 v0","方法草案",0],
     ["11/28 六","緩衝：補讀落後的部分","—",0],
     ["11/29 日","回顧，挑出第一個要實作的元件","下週開始實作",0]
   ];
-  var KEY="thesis-sched-v2", done={};
+  var KEY="thesis-sched-v3", done={};
   try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){done={}}
   var tb=document.getElementById("sched");
   document.getElementById("progT").textContent=rows.length;
